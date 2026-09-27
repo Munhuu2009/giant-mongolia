@@ -1,26 +1,56 @@
 @import "tailwindcss";
 
 :root {
+  /* Base neutrals */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0d0d0d;
+
+  /* Extended neutral scale */
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f2f2f2;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-600: #525252;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #0d0d0d;
+
+  /* Giant-inspired accent — bold red/orange */
+  --color-accent: #e2231a;
+  --color-accent-dark: #b91c14;
+
+  /* Dark section background (used explicitly, not tied to OS theme) */
+  --color-surface-dark: #111111;
+
+  /* Spacing scale (on top of Tailwind's defaults) */
+  --spacing-section: 6rem;
+  --spacing-section-lg: 9rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-neutral-50: var(--color-neutral-50);
+  --color-neutral-100: var(--color-neutral-100);
+  --color-neutral-200: var(--color-neutral-200);
+  --color-neutral-400: var(--color-neutral-400);
+  --color-neutral-600: var(--color-neutral-600);
+  --color-neutral-800: var(--color-neutral-800);
+  --color-neutral-900: var(--color-neutral-900);
+
+  --color-accent: var(--color-accent);
+  --color-accent-dark: var(--color-accent-dark);
+  --color-surface-dark: var(--color-surface-dark);
+
+  --spacing-section: var(--spacing-section);
+  --spacing-section-lg: var(--spacing-section-lg);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
