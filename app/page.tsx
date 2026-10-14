@@ -1,17 +1,23 @@
-import Button from "@/components/ui/Button";
-import Card from "@/components/ui/Card";
+import SiteHeader from "@/components/site-header";
+import Hero from "@/components/hero";
+import DisciplineGrid from "@/components/discipline-grid";
+import FeaturedBikes from "@/components/featured-bikes";
+import TechnologySection from "@/components/technology-section";
+import FlagshipStore from "@/components/flagship-store";
+import SiteFooter from "@/components/site-footer";
 
 export default function Home() {
   return (
-    <main className="p-12 space-y-6">
-      <div className="space-x-4">
-        <Button variant="primary">Shop Bikes</Button>
-        <Button variant="secondary">Explore E-Bikes</Button>
-        <Button variant="ghost">Learn More</Button>
-      </div>
-      <Card className="p-6 w-64">
-        <p>Test card content</p>
-      </Card>
-    </main>
+    <>
+      <SiteHeader />
+      <main>
+        <Hero />
+        <DisciplineGrid />
+        <FeaturedBikes />
+        <TechnologySection />
+        <FlagshipStore />
+      </main>
+      <SiteFooter />
+    </>
   );
 }
