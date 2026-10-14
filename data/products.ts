@@ -53,6 +53,11 @@ export const featuredProducts: Product[] = [
   },
 ];
 
+/** Single entry point for product data so the source can later become a real catalog API. */
+export async function getFeaturedProducts(): Promise<Product[]> {
+  return featuredProducts;
+}
+
 export function formatMnt(value: number): string {
   return `₮${value.toLocaleString("en-US")}`;
 }
