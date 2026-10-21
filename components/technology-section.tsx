@@ -22,12 +22,12 @@ const specs = [
 
 export default function TechnologySection() {
   return (
-    <section id="technology" aria-labelledby="technology-heading" className="scroll-mt-16 bg-black py-20 text-white md:py-28">
-      <div className="mx-auto max-w-7xl px-4 md:px-8">
+    <section id="technology" aria-labelledby="technology-heading" className="panel panel-dark">
+      <div className="wrap">
         <SectionHeading id="technology-heading" eyebrow="Engineered by Giant" title="Technology" inverted />
 
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="relative aspect-[4/3] overflow-hidden bg-neutral-900 lg:aspect-auto">
+        <div className="tech">
+          <div className="tech__media">
             <Image
               src="/images/technology-frame.png"
               alt="Close-up of carbon fiber weave on a Giant bicycle frame"
@@ -37,19 +37,14 @@ export default function TechnologySection() {
             />
           </div>
 
-          <ol className="flex flex-col">
-            {specs.map((spec, i) => (
-              <li key={spec.title} className="flex gap-6 border-t border-neutral-800 py-7 last:border-b md:gap-10">
-                <span className="font-mono text-sm font-semibold text-accent" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div>
-                  <h3 className="text-xl font-black uppercase tracking-tight md:text-2xl">{spec.title}</h3>
-                  <p className="mt-2 max-w-md leading-relaxed text-neutral-400">{spec.body}</p>
-                </div>
+          <ul className="spec-list">
+            {specs.map((spec) => (
+              <li key={spec.title} className="spec-card">
+                <h3 className="type-title">{spec.title}</h3>
+                <p>{spec.body}</p>
               </li>
             ))}
-          </ol>
+          </ul>
         </div>
       </div>
     </section>

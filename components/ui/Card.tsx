@@ -11,14 +11,7 @@ export default function Card({
   ...props
 }: CardProps) {
   return (
-    <div
-      className={`bg-white border border-neutral-200 overflow-hidden ${
-        hoverEffect
-          ? "transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg"
-          : ""
-      } ${className}`}
-      {...props}
-    >
+    <div className={["card", hoverEffect ? "card-hover" : "", className].filter(Boolean).join(" ")} {...props}>
       {children}
     </div>
   );

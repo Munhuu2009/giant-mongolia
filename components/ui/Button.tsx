@@ -1,35 +1,26 @@
-import { ButtonHTMLAttributes, forwardRef } from "react";
+import Link from "next/link";
+import { type ButtonHTMLAttributes, type ComponentProps, forwardRef } from "react";
 
-type ButtonVariant = "primary" | "secondary" | "ghost";
-type ButtonSize = "md" | "lg";
+// primary / secondary / ghost are solid. glass* are for use on top of photos only.
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "glass" | "glass-strong";
+export type ButtonSize = "sm" | "md" | "lg";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+type StyleProps = {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  className?: string;
+};
+
+export function buttonClasses({ variant = "primary", size = "md", className = "" }: StyleProps = {}) {
+  return ["btn", `btn-${variant}`, `btn-${size}`, className].filter(Boolean).join(" ");
 }
 
-const variantStyles: Record<ButtonVariant, string> = {
-  primary:
-    "bg-neutral-900 text-white hover:bg-accent transition-colors duration-200",
-  secondary:
-    "bg-transparent text-neutral-900 border border-neutral-900 hover:bg-neutral-900 hover:text-white transition-colors duration-200",
-  ghost:
-    "bg-transparent text-neutral-900 hover:text-accent transition-colors duration-200",
-};
-
-const sizeStyles: Record<ButtonSize, string> = {
-  md: "px-6 py-3 text-sm",
-  lg: "px-8 py-4 text-base",
-};
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, StyleProps {}
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = "primary", size = "md", className = "", children, ...props }, ref) => {
+  ({ variant, size, className, children, type = "button", ...props }, ref) => {
     return (
-      <button
-        ref={ref}
-        className={`inline-flex items-center justify-center font-semibold uppercase tracking-wide rounded-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
-        {...props}
-      >
+      <button ref={ref} type={type} className={buttonClasses({ variant, size, className })} {...props}>
         {children}
       </button>
     );
@@ -38,3 +29,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
 Button.displayName = "Button";
 export default Button;
+
+type ButtonLinkProps = Omit<ComponentProps<typeof Link>, "className"> & StyleProps;
+
+export function ButtonLink({ variant, size, className, children, ...props }: ButtonLinkProps) {
+  return (
+    <Link className={buttonClasses({ variant, size, className })} {...props}>
+      {children}
+    </Link>
+  );
+}

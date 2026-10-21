@@ -1,15 +1,20 @@
-export default function Logo({ inverted = false }: { inverted?: boolean }) {
+import Image from "next/image";
+
+type LogoProps = { inverted?: boolean; className?: string };
+
+// Set width and height to your logo's real shape (for example 160 x 40 for a 4:1 logo).
+// The className controls how big it is on screen.
+export default function Logo({ inverted = false, className }: LogoProps) {
   return (
-    <span className="flex items-center gap-2.5 text-lg font-black uppercase leading-none tracking-tight">
-      <span className={inverted ? "text-white" : "text-neutral-900"}>Giant</span>
-      <span aria-hidden="true" className="h-5 w-px bg-accent" />
-      <span
-        className={`text-xs font-semibold tracking-[0.3em] ${
-          inverted ? "text-neutral-400" : "text-neutral-600"
-        }`}
-      >
-        Mongolia
-      </span>
-    </span>
+    <Image
+      src="/images/logo.png"
+      alt="Giant Mongolia"
+      width={160}
+      height={40}
+      priority
+      className={`${className ?? "h-8 w-auto md:h-10"} ${inverted ? "brightness-0 invert" : ""}`}
+    />
   );
 }
+
+export { Logo };

@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
+import SiteFooter from "@/components/site-footer";
+import SiteHeader from "@/components/site-header";
 import "./globals.css";
 
 const inter = Inter({
@@ -13,21 +15,38 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Giant Mongolia — Official Giant Bicycles Retailer",
+  title: {
+    default: "Giant Mongolia — Official Giant Bicycles Retailer",
+    template: "%s — Giant Mongolia",
+  },
   description:
     "Road, mountain, gravel, city, kids, and e-bikes from Giant. Visit the Giant Mongolia flagship store in Ulaanbaatar for test rides, bike fitting, and service.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
   width: "device-width",
   initialScale: 1,
 };
 
+// Runs before first paint: saved choice wins, otherwise the OS setting.
+// Keep the colors in sync with --bg in globals.css and THEME_COLOR in theme-toggle.tsx.
+const themeInitScript = `(function(){var d=document.documentElement,t=null;try{var s=localStorage.getItem("gm-theme");if(s==="light"||s==="dark")t=s}catch(e){}if(!t){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}d.setAttribute("data-theme",t);d.style.colorScheme=t;var m=document.createElement("meta");m.name="theme-color";m.content=t==="dark"?"#0b0c0f":"#f2f3f5";document.head.appendChild(m)})();`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className="min-h-full flex flex-col">
+        <SiteHeader />
+        {children}
+        <SiteFooter />
+      </body>
     </html>
   );
 }
