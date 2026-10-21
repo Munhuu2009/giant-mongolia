@@ -2,13 +2,14 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 import { Moon, Sun } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
 
 const STORAGE_KEY = "gm-theme";
 
 type Theme = "light" | "dark";
 
 // Must match --bg in globals.css and the inline script in app/layout.tsx.
-const THEME_COLOR: Record<Theme, string> = { light: "#f2f3f5", dark: "#0b0c0f" };
+const THEME_COLOR: Record<Theme, string> = { light: "#ffffff", dark: "#0b0f17" };
 
 function readTheme(): Theme {
   return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
@@ -37,6 +38,7 @@ function subscribe(onChange: () => void) {
 }
 
 export default function ThemeToggle() {
+  const { translate } = useLanguage();
   // The server always renders "light"; the inline script has already set the real theme.
   const theme = useSyncExternalStore<Theme>(subscribe, readTheme, () => "light");
 
@@ -65,7 +67,7 @@ export default function ThemeToggle() {
       type="button"
       role="switch"
       aria-checked={theme === "dark"}
-      aria-label="Dark mode"
+      aria-label={translate("Dark mode")}
       onClick={toggle}
       className="icon-btn theme-toggle"
     >

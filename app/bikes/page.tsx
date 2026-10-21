@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageIntro from "@/components/page-intro";
 import ProductCard from "@/components/product-card";
+import LocalizedText from "@/components/localized-text";
 import { getDisciplineById } from "@/data/disciplines";
 import { bikesPage } from "@/data/pages";
 import { getProductsByDiscipline } from "@/data/products";
@@ -38,7 +39,11 @@ export default async function BikesPage({
       <section aria-labelledby="bikes-heading" className="section">
         <div className="wrap">
           {list.length === 0 ? (
-            <p className="type-lead">{/* PLACEHOLDER */ "No bikes in this category yet. Check back soon or browse the full range."}</p>
+            <LocalizedText
+              as="p"
+              className="type-lead"
+              text="No bikes in this category yet. Check back soon or browse the full range."
+            />
           ) : (
             <ul className="product-grid">
               {list.map((product) => (

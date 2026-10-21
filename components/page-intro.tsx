@@ -1,3 +1,7 @@
+"use client";
+
+import { useLanguage } from "@/components/language-provider";
+
 type PageIntroProps = {
   id?: string;
   eyebrow: string;
@@ -6,13 +10,15 @@ type PageIntroProps = {
 };
 
 export default function PageIntro({ id, eyebrow, title, lead }: PageIntroProps) {
+  const { translate } = useLanguage();
+
   return (
     <header className="page-intro wrap">
-      <p className="chip chip-accent">{eyebrow}</p>
+      <p className="chip chip-accent">{translate(eyebrow)}</p>
       <h1 id={id} className="type-headline">
-        {title}
+        {translate(title)}
       </h1>
-      <p className="type-lead">{lead}</p>
+      <p className="type-lead">{translate(lead)}</p>
     </header>
   );
 }

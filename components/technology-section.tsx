@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useLanguage } from "@/components/language-provider";
 import SectionHeading from "@/components/section-heading";
 
 const specs = [
@@ -21,16 +24,23 @@ const specs = [
 ];
 
 export default function TechnologySection() {
+  const { translate } = useLanguage();
+
   return (
-    <section id="technology" aria-labelledby="technology-heading" className="panel panel-dark">
-      <div className="wrap">
-        <SectionHeading id="technology-heading" eyebrow="Engineered by Giant" title="Technology" inverted />
+    <section id="technology" aria-labelledby="technology-heading" className="technology-section panel-dark">
+      <div className="technology-section__inner">
+        <SectionHeading
+          id="technology-heading"
+          eyebrow={translate("Engineered by Giant")}
+          title={translate("Technology")}
+          inverted
+        />
 
         <div className="tech">
           <div className="tech__media">
             <Image
               src="/images/technology-frame.png"
-              alt="Close-up of carbon fiber weave on a Giant bicycle frame"
+              alt={translate("Close-up of carbon fiber weave on a Giant bicycle frame")}
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-cover"
@@ -40,8 +50,8 @@ export default function TechnologySection() {
           <ul className="spec-list">
             {specs.map((spec) => (
               <li key={spec.title} className="spec-card">
-                <h3 className="type-title">{spec.title}</h3>
-                <p>{spec.body}</p>
+                <h3 className="type-title">{translate(spec.title)}</h3>
+                <p>{translate(spec.body)}</p>
               </li>
             ))}
           </ul>

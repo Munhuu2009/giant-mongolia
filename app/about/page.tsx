@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import FlagshipStore from "@/components/flagship-store";
+import LocalizedText from "@/components/localized-text";
 import PageIntro from "@/components/page-intro";
 import { aboutPage } from "@/data/pages";
 
@@ -17,9 +18,7 @@ export default function AboutPage() {
       <section aria-labelledby="about-heading" className="panel">
         <div className="wrap">
           {aboutPage.paragraphs.map((paragraph) => (
-            <p key={paragraph} className="type-lead mb-4">
-              {paragraph}
-            </p>
+            <LocalizedText key={paragraph} as="p" className="type-lead mb-4" text={paragraph} />
           ))}
         </div>
       </section>

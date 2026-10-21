@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/components/language-provider";
 
 export default function ProductSizeSelector({
   sizes,
@@ -9,12 +10,13 @@ export default function ProductSizeSelector({
   sizes: string[];
   productName: string;
 }) {
+  const { translate } = useLanguage();
   const [selected, setSelected] = useState(sizes[0] ?? "");
 
   return (
     <fieldset className="mt-8">
-      <legend className="type-label">Select size</legend>
-      <p className="sr-only">{`Available sizes for ${productName}`}</p>
+      <legend className="type-label">{translate("Select size")}</legend>
+      <p className="sr-only">{translate(`Available sizes for ${productName}`)}</p>
       <div className="size-list">
         {sizes.map((size) => (
           <button

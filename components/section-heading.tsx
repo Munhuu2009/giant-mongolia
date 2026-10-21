@@ -1,4 +1,7 @@
+"use client";
+
 import type { ReactNode } from "react";
+import { useLanguage } from "@/components/language-provider";
 
 type SectionHeadingProps = {
   id: string;
@@ -9,12 +12,14 @@ type SectionHeadingProps = {
 };
 
 export default function SectionHeading({ id, eyebrow, title, action, inverted = false }: SectionHeadingProps) {
+  const { translate } = useLanguage();
+
   return (
     <div className="section-heading">
       <div>
-        <p className="chip chip-accent mb-4">{eyebrow}</p>
+        <p className="chip chip-accent mb-4">{translate(eyebrow)}</p>
         <h2 id={id} className={inverted ? "type-headline is-inverted" : "type-headline"}>
-          {title}
+          {translate(title)}
         </h2>
       </div>
       {action}

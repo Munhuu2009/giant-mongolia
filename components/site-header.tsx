@@ -1,98 +1,245 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useEffect, useRef, useState } from "react";
-import { Menu, Search, ShoppingBag, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight, ChevronDown, Menu, Search, ShoppingBag, UserRound, X } from "lucide-react";
 import Logo from "@/components/logo";
+import { useLanguage } from "@/components/language-provider";
 import SearchDialog from "@/components/search-dialog";
-import SiteNavLinks from "@/components/site-nav-links";
 import ThemeToggle from "@/components/theme-toggle";
-import { navItems } from "@/data/navigation";
 
-function NavFallback({ mobile = false }: { mobile?: boolean }) {
-  return (
-    <ul>
-      {navItems.map((item) => (
-        <li key={item.label}>
-          <Link href={item.href} className={mobile ? undefined : "nav-link"}>
-            {item.label}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
-}
+const primaryLinks = [
+  { key: "nav.bikes", href: "/bikes" },
+  { key: "nav.gear", href: "/gear" },
+  { key: "nav.technology", href: "/technology" },
+  { key: "nav.stores", href: "/stores" },
+] as const;
 
 export default function SiteHeader() {
+  const { language, setLanguage, t, translate } = useLanguage();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [marketOpen, setMarketOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const updateScrollState = () => setScrolled(window.scrollY > 24);
+    updateScrollState();
+    window.addEventListener("scroll", updateScrollState, { passive: true });
+    return () => window.removeEventListener("scroll", updateScrollState);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        setOpen(false);
+        menuButtonRef.current?.focus();
+        return;
+      }
+
+      if (event.key === "Tab") {
+        const focusable = drawerRef.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusable?.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
   }, [open]);
 
+  const overlay = pathname === "/" && !scrolled;
+
+  function closeDrawer() {
+    setOpen(false);
+    menuButtonRef.current?.focus();
+  }
+
   return (
-    <header className="site-header">
-      <div className="wrap site-header__bar">
-        <Link href="/" aria-label="Giant Mongolia home" className="site-header__logo" onClick={() => setOpen(false)}>
-          <Logo />
-        </Link>
+    <>
+      <header className={`site-header${overlay ? " site-header--overlay" : ""}${scrolled ? " site-header--scrolled" : ""}`}>
+        <div className="wrap site-header__bar">
+          <div className="site-header__left">
+            <button
+              ref={menuButtonRef}
+              type="button"
+              aria-label={open ? t("nav.closeMenu") : t("nav.openMenu")}
+              aria-expanded={open}
+              aria-controls="site-drawer"
+              className="site-header__menu-button"
+              onClick={() => setOpen((value) => !value)}
+            >
+              <Menu className="h-6 w-6" strokeWidth={1.8} aria-hidden="true" />
+            </button>
+            <nav aria-label={t("nav.primary")} className="site-nav">
+              {primaryLinks.map((link) => (
+                <Link key={link.key} href={link.href} className="nav-link">
+                  {t(link.key)}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
-        <nav aria-label="Primary" className="site-nav">
-          <Suspense fallback={<NavFallback />}>
-            <SiteNavLinks />
-          </Suspense>
-        </nav>
+          <Link href="/" aria-label={translate("Giant Mongolia home")} className="site-header__brand">
+            <Logo className="w-auto" inverted={overlay} />
+          </Link>
 
-        <div className="site-header__actions">
-          <button
-            ref={searchButtonRef}
-            type="button"
-            aria-label="Search"
-            aria-haspopup="dialog"
-            aria-expanded={searchOpen}
-            aria-controls="search-dialog"
-            className="icon-btn"
-            onClick={() => setSearchOpen(true)}
-          >
-            <Search className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
-          </button>
-          <button type="button" aria-label="Cart, 0 items" className="icon-btn">
-            <ShoppingBag className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
-          </button>
-          <ThemeToggle />
-          <button
-            type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            onClick={() => setOpen((v) => !v)}
-            className="icon-btn site-header__menu"
-          >
-            {open ? (
-              <X className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
-            ) : (
-              <Menu className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
-            )}
-          </button>
+          <div className="site-header__actions">
+            <button
+              ref={searchButtonRef}
+              type="button"
+              aria-label={t("nav.search")}
+              aria-haspopup="dialog"
+              aria-expanded={searchOpen}
+              aria-controls="search-dialog"
+              className="site-header__utility"
+              onClick={() => setSearchOpen(true)}
+            >
+              <Search className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
+            </button>
+            <button type="button" aria-label={t("nav.cart")} className="site-header__utility">
+              <ShoppingBag className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
+            </button>
+            <button type="button" aria-label={t("nav.account")} className="site-header__utility">
+              <UserRound className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
+            </button>
+            <div className="site-language-toggle" role="group" aria-label={t("language.label")}>
+              {(["en", "mn"] as const).map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  aria-label={t(option === "en" ? "language.english" : "language.mongolian")}
+                  aria-pressed={language === option}
+                  onClick={() => setLanguage(option)}
+                >
+                  {option.toUpperCase()}
+                </button>
+              ))}
+            </div>
+            <ThemeToggle />
+          </div>
         </div>
+
+      </header>
+
+      <div className={`site-drawer-layer${open ? " is-open" : ""}`} aria-hidden={!open} inert={!open}>
+        <button
+          type="button"
+          className="site-drawer-backdrop"
+          aria-label={t("nav.closeMenu")}
+          tabIndex={open ? 0 : -1}
+          onClick={closeDrawer}
+        />
+        <aside
+          ref={drawerRef}
+          id="site-drawer"
+          role="dialog"
+          aria-modal="true"
+          aria-label={t("nav.siteMenu")}
+          className="site-drawer"
+        >
+          <div className="site-drawer__head">
+            <Link href="/" aria-label={translate("Giant Mongolia home")} onClick={() => setOpen(false)}>
+              <Logo className="site-drawer__logo w-auto" />
+            </Link>
+            <div className="site-drawer__head-actions">
+              <div className="site-drawer__theme">
+                <ThemeToggle />
+              </div>
+              <button
+                ref={closeButtonRef}
+                type="button"
+                aria-label={t("nav.closeMenu")}
+                className="site-drawer__close"
+                onClick={closeDrawer}
+              >
+                <X className="h-6 w-6" strokeWidth={1.8} aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+          <nav aria-label={t("nav.menu")}>
+            <ul className="site-drawer__links">
+              {primaryLinks.map((link) => (
+                <li key={link.key}>
+                  <Link href={link.href} onClick={closeDrawer}>
+                    {t(link.key)}
+                    <ArrowUpRight className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <button
+                  type="button"
+                  aria-expanded={marketOpen}
+                  className="site-drawer__market"
+                  onClick={() => setMarketOpen((value) => !value)}
+                >
+                  {t("nav.selectMarket")}
+                  <ChevronDown
+                    className={`h-5 w-5${marketOpen ? " is-open" : ""}`}
+                    strokeWidth={1.8}
+                    aria-hidden="true"
+                  />
+                </button>
+                {marketOpen && (
+                  <div className="site-drawer__markets">
+                    <span aria-current="true">{t("nav.mongolia")}</span>
+                    <a href="https://www.giant-bicycles.com/global" target="_blank" rel="noreferrer">
+                      {t("nav.global")}
+                      <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                    </a>
+                  </div>
+                )}
+              </li>
+            </ul>
+          </nav>
+
+          <div className="site-drawer__brands">
+            <p className="site-drawer__eyebrow">{t("nav.moreWays")}</p>
+            <a href="https://www.liv-cycling.com" target="_blank" rel="noreferrer">
+              <span>Liv</span>
+              <small>{t("nav.forWomen")}</small>
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+            <a href="https://www.momentum-biking.com" target="_blank" rel="noreferrer">
+              <span>Momentum</span>
+              <small>{t("nav.forCity")}</small>
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+            <a href="https://dynamiccyclingfit.com" target="_blank" rel="noreferrer">
+              <span>Dynamic Cycling Fit</span>
+              <small>{t("nav.forFit")}</small>
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </div>
+        </aside>
       </div>
 
-      {open && (
-        <nav id="mobile-menu" aria-label="Mobile" className="mobile-menu">
-          <Suspense fallback={<NavFallback mobile />}>
-            <SiteNavLinks mobile onNavigate={() => setOpen(false)} />
-          </Suspense>
-        </nav>
-      )}
-
       <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} triggerRef={searchButtonRef} />
-    </header>
+    </>
   );
 }

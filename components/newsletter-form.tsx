@@ -2,9 +2,11 @@
 
 import { useState, type FormEvent } from "react";
 import { ArrowRight } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
 import Button from "@/components/ui/Button";
 
 export default function NewsletterForm() {
+  const { t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -16,7 +18,7 @@ export default function NewsletterForm() {
   if (submitted) {
     return (
       <p role="status" className="notice">
-        {"Thanks for subscribing. We'll be in touch with new arrivals and rides."}
+        {t("newsletter.success")}
       </p>
     );
   }
@@ -24,7 +26,7 @@ export default function NewsletterForm() {
   return (
     <form onSubmit={handleSubmit} className="newsletter">
       <label htmlFor="newsletter-email" className="sr-only">
-        Email address
+        {t("newsletter.email")}
       </label>
       <input
         id="newsletter-email"
@@ -32,11 +34,11 @@ export default function NewsletterForm() {
         name="email"
         required
         autoComplete="email"
-        placeholder="Your email address"
+        placeholder={t("newsletter.placeholder")}
         className="field"
       />
       <Button type="submit" variant="primary" size="lg">
-        Subscribe
+        {t("newsletter.submit")}
         <ArrowRight className="arrow h-5 w-5" aria-hidden="true" />
       </Button>
     </form>

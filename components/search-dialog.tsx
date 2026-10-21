@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type RefObject } from "react";
 import { X } from "lucide-react";
+import { useLanguage } from "@/components/language-provider";
 import { disciplines, type Discipline } from "@/data/disciplines";
-import { searchCopy } from "@/data/pages";
 import { formatMnt, searchProducts, type Product } from "@/data/products";
 
 const RESULT_LIMIT = 6;
@@ -22,6 +22,7 @@ type Hit =
   | { kind: "discipline"; id: string; href: string; discipline: Discipline };
 
 export default function SearchDialog({ open, onOpenChange, triggerRef }: SearchDialogProps) {
+  const { t, translate } = useLanguage();
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -163,9 +164,9 @@ export default function SearchDialog({ open, onOpenChange, triggerRef }: SearchD
       <div className="search-dialog__sheet">
         <div className="search-dialog__head">
           <h2 id="search-dialog-title" className="type-title">
-            {searchCopy.title}
+            {t("search.title")}
           </h2>
-          <button type="button" className="icon-btn" aria-label={searchCopy.closeLabel} onClick={close}>
+          <button type="button" className="icon-btn" aria-label={t("search.close")} onClick={close}>
             <X className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
           </button>
         </div>
@@ -178,7 +179,7 @@ export default function SearchDialog({ open, onOpenChange, triggerRef }: SearchD
           }}
         >
           <label htmlFor="site-search" className="sr-only">
-            {searchCopy.title}
+            {t("search.title")}
           </label>
           <input
             ref={inputRef}
@@ -187,7 +188,7 @@ export default function SearchDialog({ open, onOpenChange, triggerRef }: SearchD
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             onKeyDown={onInputKeyDown}
-            placeholder={searchCopy.placeholder}
+            placeholder={t("search.placeholder")}
             autoComplete="off"
             className="search-field"
             role="combobox"
@@ -197,16 +198,16 @@ export default function SearchDialog({ open, onOpenChange, triggerRef }: SearchD
             aria-activedescendant={activeId}
           />
         </form>
-        <p className="search-dialog__hint">{searchCopy.hint}</p>
+        <p className="search-dialog__hint">{t("search.hint")}</p>
 
         <div className="search-dialog__body">
           {showEmpty ? (
             <p role="status" className="search-empty">
-              {`${searchCopy.emptyPrefix} “${trimmed}”`}
+              {`${t("search.empty")} “${trimmed}”`}
             </p>
           ) : trimmed ? (
             <>
-              <p className="type-label search-dialog__label">{searchCopy.resultsLabel}</p>
+              <p className="type-label search-dialog__label">{t("search.results")}</p>
               <ul id={listId} role="listbox" className="search-hits">
                 {hits.map((hit, index) => {
                   if (hit.kind !== "product") return null;
@@ -243,7 +244,7 @@ export default function SearchDialog({ open, onOpenChange, triggerRef }: SearchD
             </>
           ) : (
             <>
-              <p className="type-label search-dialog__label">{searchCopy.disciplinesLabel}</p>
+              <p className="type-label search-dialog__label">{t("search.disciplines")}</p>
               <div id={listId} role="listbox" className="search-quick">
                 {hits.map((hit, index) => {
                   if (hit.kind !== "discipline") return null;
@@ -259,7 +260,7 @@ export default function SearchDialog({ open, onOpenChange, triggerRef }: SearchD
                       onClick={close}
                       onMouseEnter={() => setHighlighted(index)}
                     >
-                      {hit.discipline.name}
+                      {translate(hit.discipline.name)}
                     </Link>
                   );
                 })}

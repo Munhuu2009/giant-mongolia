@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useLanguage } from "@/components/language-provider";
 import { navItems } from "@/data/navigation";
 
 function isActiveLink(href: string, pathname: string, discipline: string | null) {
@@ -27,6 +28,7 @@ export default function SiteNavLinks({
   mobile?: boolean;
 }) {
   const pathname = usePathname();
+  const { translate } = useLanguage();
   const searchParams = useSearchParams();
   const discipline = searchParams.get("discipline");
 
@@ -42,7 +44,7 @@ export default function SiteNavLinks({
               aria-current={active ? "page" : undefined}
               onClick={onNavigate}
             >
-              {item.label}
+              {translate(item.label)}
             </Link>
           </li>
         );

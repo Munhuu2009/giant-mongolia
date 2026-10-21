@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import PageIntro from "@/components/page-intro";
+import LocalizedText from "@/components/localized-text";
 import { ButtonLink } from "@/components/ui/Button";
 import { contactPage } from "@/data/pages";
 import { store } from "@/data/store";
@@ -26,7 +27,7 @@ export default function ContactPage() {
             <div className="spec-card">
               <dt className="type-label flex items-center gap-2">
                 <MapPin className="h-4 w-4" aria-hidden="true" />
-                Address
+                <LocalizedText text="Address" />
               </dt>
               <dd className="mt-3">
                 {store.address.map((line) => (
@@ -39,20 +40,17 @@ export default function ContactPage() {
             <div className="spec-card">
               <dt className="type-label flex items-center gap-2">
                 <Clock className="h-4 w-4" aria-hidden="true" />
-                Hours
+                <LocalizedText text="Hours" />
               </dt>
               <dd className="mt-3">
-                {store.hours.map((line) => (
-                  <span key={line} className="block">
-                    {line}
-                  </span>
-                ))}
+                <LocalizedText as="span" className="block" text="Mon–Fri: 10:00 – 20:00" />
+                <LocalizedText as="span" className="block" text="Sat–Sun: 11:00 – 19:00" />
               </dd>
             </div>
             <div className="spec-card">
               <dt className="type-label flex items-center gap-2">
                 <Phone className="h-4 w-4" aria-hidden="true" />
-                Phone
+                <LocalizedText text="Phone" />
               </dt>
               <dd className="mt-3">
                 <a href={`tel:${store.phone.replace(/\s/g, "")}`} className="plain-link">
@@ -63,7 +61,7 @@ export default function ContactPage() {
             <div className="spec-card">
               <dt className="type-label flex items-center gap-2">
                 <Mail className="h-4 w-4" aria-hidden="true" />
-                Email
+                <LocalizedText text="Email" />
               </dt>
               <dd className="mt-3">
                 {/* PLACEHOLDER */}
@@ -75,7 +73,7 @@ export default function ContactPage() {
           </dl>
 
           <ButtonLink href="/stores" variant="secondary" size="md" className="mt-8">
-            Flagship store details
+            <LocalizedText text="Flagship store details" />
           </ButtonLink>
         </div>
       </section>

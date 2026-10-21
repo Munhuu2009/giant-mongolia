@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PageIntro from "@/components/page-intro";
+import LocalizedText from "@/components/localized-text";
 import { ButtonLink } from "@/components/ui/Button";
 import { servicePage } from "@/data/pages";
 
@@ -24,13 +25,13 @@ export default function ServicePage() {
           <ul className="spec-list">
             {servicePage.items.map((item) => (
               <li key={item.title} className="spec-card">
-                <h2 className="type-title">{item.title}</h2>
-                <p>{item.body}</p>
+                <LocalizedText as="h2" className="type-title" text={item.title} />
+                <LocalizedText as="p" text={item.body} />
               </li>
             ))}
           </ul>
           <ButtonLink href="/stores" variant="secondary" size="md" className="mt-8">
-            Visit the workshop
+            <LocalizedText text="Visit the workshop" />
           </ButtonLink>
         </div>
       </section>

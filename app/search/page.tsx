@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageIntro from "@/components/page-intro";
+import LocalizedText from "@/components/localized-text";
 import ProductCard from "@/components/product-card";
 import { ButtonLink } from "@/components/ui/Button";
 import { searchCopy } from "@/data/pages";
@@ -52,10 +53,10 @@ export default async function SearchPage({
           {q && results.length === 0 ? (
             <div>
               <p role="status" className="type-lead">
-                {`${searchCopy.emptyPrefix} “${q}”`}
+                <LocalizedText text={`${searchCopy.emptyPrefix} “${q}”`} />
               </p>
               <ButtonLink href="/bikes" variant="secondary" size="md" className="mt-8">
-                Browse all bikes
+                <LocalizedText text="Browse all bikes" />
               </ButtonLink>
             </div>
           ) : results.length > 0 ? (
@@ -68,9 +69,9 @@ export default async function SearchPage({
             </ul>
           ) : (
             <p className="type-lead">
-              Type a bike name in search, or{" "}
+              <LocalizedText text="Type a bike name in search, or" />{" "}
               <Link href="/bikes" className="plain-link">
-                browse all bikes
+                <LocalizedText text="browse all bikes" />
               </Link>
               .
             </p>

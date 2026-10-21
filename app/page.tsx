@@ -6,10 +6,10 @@ import FlagshipStore from "@/components/flagship-store";
 
 export default function Home() {
   return (
-    <main>
+    <main className="home-page">
       <Hero />
-      <DisciplineGrid />
       <FeaturedBikes />
+      <DisciplineGrid />
       <TechnologySection />
       <FlagshipStore />
     </main>
