@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import { useLanguage } from "@/components/language-provider";
 import { ButtonLink } from "@/components/ui/Button";
@@ -23,6 +24,15 @@ const features = [
   },
 ];
 
+const reveal = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 export default function Hero() {
   const { t, translate } = useLanguage();
   const [activeFeature, setActiveFeature] = useState<number | null>(null);
@@ -43,13 +53,14 @@ export default function Hero() {
       <div aria-hidden="true" className="hero__showcase-scrim" />
 
       {features.map((feature, index) => (
-        <button
+        <motion.button
           key={feature.label}
           type="button"
           className={`hero__hotspot ${feature.position}${activeFeature === index ? " is-active" : ""}`}
           aria-label={translate(feature.label)}
           aria-pressed={activeFeature === index}
           onClick={() => setActiveFeature(activeFeature === index ? null : index)}
+          whileTap={{ scale: 0.98 }}
         >
           <span className="hero__hotspot-pulse" />
           {activeFeature === index && (
@@ -58,11 +69,17 @@ export default function Hero() {
               <span>{feature.detail}</span>
             </span>
           )}
-        </button>
+        </motion.button>
       ))}
 
       <div className="hero__showcase-copy">
-        <div className="hero__showcase-content max-w-xl relative z-10 space-y-6">
+        <motion.div
+          className="hero__showcase-content max-w-xl relative z-10 space-y-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={reveal}
+        >
           <p className="hero__showcase-eyebrow">{t("hero.category")}</p>
           <h1
             id="hero-heading"
@@ -71,10 +88,12 @@ export default function Hero() {
             {t("hero.title")}
           </h1>
           <p className="hero__showcase-description">{t("hero.description")}</p>
-          <ButtonLink href="/bikes" variant="primary" size="lg" className="hero__showcase-cta">
-            {t("hero.cta")}
-          </ButtonLink>
-        </div>
+          <motion.div whileTap={{ scale: 0.98 }} transition={{ duration: 0.2 }}>
+            <ButtonLink href="/bikes" variant="primary" size="lg" className="hero__showcase-cta">
+              {t("hero.cta")}
+            </ButtonLink>
+          </motion.div>
+        </motion.div>
       </div>
 
       <div className="hero__showcase-footer">
@@ -85,7 +104,11 @@ export default function Hero() {
           </span>
           <span>04</span>
         </div>
-        <figure className="hero__detail-card">
+        <motion.figure
+          className="hero__detail-card"
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.3 }}
+        >
           <div className="hero__detail-image">
             <Image
               src="/images/technology-frame.png"
@@ -98,7 +121,7 @@ export default function Hero() {
             <span>{translate("Advanced composite")}</span>
             <small>{translate("Engineered for the long way")}</small>
           </figcaption>
-        </figure>
+        </motion.figure>
       </div>
     </section>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/components/language-provider";
 import SectionHeading from "@/components/section-heading";
 
@@ -23,21 +24,52 @@ const specs = [
   },
 ];
 
+const gridVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 export default function TechnologySection() {
   const { translate } = useLanguage();
 
   return (
     <section id="technology" aria-labelledby="technology-heading" className="technology-section panel-dark">
       <div className="technology-section__inner">
-        <SectionHeading
-          id="technology-heading"
-          eyebrow={translate("Engineered by Giant")}
-          title={translate("Technology")}
-          inverted
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <SectionHeading
+            id="technology-heading"
+            eyebrow={translate("Engineered by Giant")}
+            title={translate("Technology")}
+            inverted
+          />
+        </motion.div>
 
-        <div className="tech">
-          <div className="tech__media">
+        <motion.div
+          className="tech"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={gridVariants}
+        >
+          <motion.div
+            className="tech__media"
+            variants={cardVariants}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
             <Image
               src="/images/technology-frame.png"
               alt={translate("Close-up of carbon fiber weave on a Giant bicycle frame")}
@@ -45,17 +77,16 @@ export default function TechnologySection() {
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-cover"
             />
-          </div>
-
-          <ul className="spec-list">
+          </motion.div>
+          <motion.ul className="spec-list" variants={gridVariants}>
             {specs.map((spec) => (
-              <li key={spec.title} className="spec-card">
+              <motion.li key={spec.title} className="spec-card" variants={cardVariants}>
                 <h3 className="type-title">{translate(spec.title)}</h3>
                 <p>{translate(spec.body)}</p>
-              </li>
+              </motion.li>
             ))}
-          </ul>
-        </div>
+          </motion.ul>
+        </motion.div>
       </div>
     </section>
   );

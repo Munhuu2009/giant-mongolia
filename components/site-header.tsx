@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, ChevronDown, Menu, Search, ShoppingBag, UserRound, X } from "lucide-react";
 import Logo from "@/components/logo";
+import { useCart } from "@/components/cart-context";
 import { useLanguage } from "@/components/language-provider";
 import SearchDialog from "@/components/search-dialog";
 import ThemeToggle from "@/components/theme-toggle";
@@ -18,6 +19,7 @@ const primaryLinks = [
 
 export default function SiteHeader() {
   const { language, setLanguage, t, translate } = useLanguage();
+  const { items, openCart } = useCart();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -27,6 +29,7 @@ export default function SiteHeader() {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLElement>(null);
+  const cartCount = items.reduce((total, item) => total + item.quantity, 0);
 
   useEffect(() => {
     const updateScrollState = () => setScrolled(window.scrollY > 24);
@@ -120,8 +123,19 @@ export default function SiteHeader() {
             >
               <Search className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
             </button>
-            <button type="button" aria-label={t("nav.cart")} className="site-header__utility">
+            <button
+              type="button"
+              aria-label={`${t("nav.cart")} (${cartCount})`}
+              aria-haspopup="dialog"
+              className="site-header__utility"
+              onClick={openCart}
+            >
               <ShoppingBag className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
+              {items.length > 0 && (
+                <span className="site-header__cart-count" aria-hidden="true">
+                  {cartCount}
+                </span>
+              )}
             </button>
             <button type="button" aria-label={t("nav.account")} className="site-header__utility">
               <UserRound className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />

@@ -205,6 +205,10 @@ export function formatMnt(value: number): string {
   return `₮${value.toLocaleString("en-US")}`;
 }
 
+export function formatUsdFromMnt(value: number): string {
+  return `$${Math.round(value / 3500).toLocaleString("en-US")}`;
+}
+
 export function getProductBySlug(slug: string): Product | undefined {
   return products.find((product) => product.slug === slug);
 }

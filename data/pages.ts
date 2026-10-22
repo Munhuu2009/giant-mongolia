@@ -57,7 +57,7 @@ export const contactPage = {
 export const gearPage = {
   eyebrow: "Apparel and accessories",
   title: "Gear",
-  lead: "Helmets, apparel, and components are on the way. Browse bikes while we finish the gear catalog.",
+  lead: "Explore Giant helmets, apparel, shoes, lights, and ride-ready accessories.",
 };
 
 export const notFoundPage = {

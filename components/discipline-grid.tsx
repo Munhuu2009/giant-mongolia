@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/components/language-provider";
 import SectionHeading from "@/components/section-heading";
 
@@ -32,21 +33,52 @@ const rideCategories = [
   },
 ] as const;
 
+const gridVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 export default function DisciplineGrid() {
   const { t, translate } = useLanguage();
 
   return (
     <section id="disciplines" aria-labelledby="disciplines-heading" className="section discipline-section">
       <div className="discipline-wrap">
-        <SectionHeading
-          id="disciplines-heading"
-          eyebrow={t("disciplines.eyebrow")}
-          title={t("disciplines.title")}
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <SectionHeading
+            id="disciplines-heading"
+            eyebrow={t("disciplines.eyebrow")}
+            title={t("disciplines.title")}
+          />
+        </motion.div>
 
-        <ul className="discipline-grid">
+        <motion.ul
+          className="discipline-grid"
+          variants={gridVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
           {rideCategories.map((category) => (
-            <li key={category.key}>
+            <motion.li
+              key={category.key}
+              variants={cardVariants}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+            >
               <Link href={category.href} className="discipline-card discipline-card--category">
                 <Image
                   src={category.image}
@@ -60,9 +92,9 @@ export default function DisciplineGrid() {
                   <span className="discipline-card__name">{t(category.key)}</span>
                 </span>
               </Link>
-            </li>
+            </motion.li>
           ))}
-        </ul>
+        </motion.ul>
       </div>
     </section>
   );
