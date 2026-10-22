@@ -2,6 +2,7 @@
 // Names, prices (MNT), and sizes below are illustrative only.
 
 import { getDisciplineById } from "./disciplines";
+import { bikesData } from "./bikesData";
 
 export type ProductSpec = {
   label: string;
@@ -23,7 +24,7 @@ export type Product = {
   discipline: string;
 };
 
-export const products: Product[] = [
+const originalProducts: Product[] = [
   {
     id: "propel-advanced-1",
     slug: "propel-advanced-1",
@@ -196,6 +197,29 @@ export const products: Product[] = [
     discipline: "kids",
   },
 ];
+
+export const products: Product[] = bikesData.map((bike) => {
+  const original = originalProducts.find((product) => product.slug === bike.slug);
+  const badge =
+    bike.badge === "new" ? "New" : bike.badge === "ebike" ? "E-Bike" : bike.badge === "kids" ? "Kids" : undefined;
+
+  return {
+    id: bike.id,
+    slug: bike.slug,
+    name: bike.name,
+    category: bike.category,
+    priceMnt: bike.priceMnt,
+    sizes: bike.sizes,
+    image: bike.image,
+    href: `/bikes/${bike.slug}`,
+    badge,
+    description:
+      original?.description ??
+      `${bike.name} is a Giant ${bike.category.toLowerCase()} bicycle, designed for its intended riding discipline. Contact Giant Mongolia for current availability and fit guidance.`,
+    specs: original?.specs ?? [{ label: "Discipline", value: bike.category }],
+    discipline: bike.categoryId,
+  };
+});
 
 const featuredIds = ["propel-advanced-1", "trance-x-2", "stance-e-plus-1", "revolt-2"];
 

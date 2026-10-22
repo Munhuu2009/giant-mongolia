@@ -34,7 +34,7 @@ export const viewport: Viewport = {
 
 // Runs before first paint: saved choice wins, otherwise the OS setting.
 // Keep the colors in sync with --bg in globals.css and THEME_COLOR in theme-toggle.tsx.
-const themeInitScript = `(function(){var d=document.documentElement,t=null;try{var s=localStorage.getItem("gm-theme");if(s==="light"||s==="dark")t=s}catch(e){}if(!t){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}d.setAttribute("data-theme",t);d.style.colorScheme=t;var m=document.createElement("meta");m.name="theme-color";m.content=t==="dark"?"#0b0f17":"#ffffff";document.head.appendChild(m)})();`;
+const themeInitScript = `(function(){var d=document.documentElement,t=null;try{var s=localStorage.getItem("gm-theme");if(s==="light"||s==="dark")t=s}catch(e){}if(!t){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}d.setAttribute("data-theme",t);d.classList.toggle("dark",t==="dark");d.style.colorScheme=t;var m=document.createElement("meta");m.name="theme-color";m.content=t==="dark"?"#0b0f17":"#ffffff";document.head.appendChild(m)})();`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

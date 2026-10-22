@@ -1,15 +1,32 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/language-provider";
 
 export default function Loading() {
   const { translate } = useLanguage();
+  const [showLoader, setShowLoader] = useState(true);
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const fadeTimer = setTimeout(() => setIsVisible(false), 1500);
+    const removeTimer = setTimeout(() => setShowLoader(false), 2000);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(removeTimer);
+    };
+  }, []);
+
+  if (!showLoader) return null;
 
   return (
     <div
       role="status"
       aria-label={translate("Loading Giant Mongolia")}
-      className="fixed inset-0 z-50 flex min-h-screen flex-col items-center justify-center bg-neutral-950 text-white"
+      className={`fixed inset-0 z-50 flex min-h-screen flex-col items-center justify-center bg-neutral-950 text-white transition-opacity duration-500 ${
+        isVisible ? "opacity-100" : "pointer-events-none opacity-0"
+      }`}
     >
       <svg
         aria-hidden="true"

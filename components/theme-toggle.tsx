@@ -18,6 +18,7 @@ function readTheme(): Theme {
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
   root.dataset.theme = theme;
+  root.classList.toggle("dark", theme === "dark");
   root.style.colorScheme = theme;
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLOR[theme]);
 }

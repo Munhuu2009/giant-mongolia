@@ -37,20 +37,27 @@ export default function SiteFooter() {
   const { t } = useLanguage();
 
   return (
-    <footer className="site-footer panel-dark">
+    <footer className="site-footer bg-neutral-100 text-neutral-900 transition-colors duration-300 dark:bg-neutral-950 dark:text-white">
       <div className="wrap">
         <div className="footer-top">
           <div>
-            <Logo inverted />
+            <Logo className="footer-logo h-10 w-auto md:h-12" />
             <h2 className="type-headline footer-title">{t("footer.stay")}</h2>
             <p className="type-lead mt-4">{t("footer.description")}</p>
             <address className="footer-store-details">
-              <span>{t("store.address")}: {store.address.join(" ")}</span>
+              <span>
+                {t("store.address")}:{" "}
+                <a href={store.directionsUrl} target="_blank" rel="noopener noreferrer">
+                  {store.address.join(" ")}
+                </a>
+              </span>
               <span>
                 {t("store.phone")}: <a href={`tel:${store.phone.replace(/\s/g, "")}`}>{store.phone}</a>
               </span>
-              <span>{t("store.hours")}: {t("store.weekdays")}</span>
-              <span>{t("store.hours")}: {t("store.weekends")}</span>
+              <span>{t("store.hours")}: {t("store.dailyHours")}</span>
+              <a href={store.directionsUrl} target="_blank" rel="noopener noreferrer">
+                {t("store.directions")}
+              </a>
             </address>
           </div>
           <NewsletterForm />
@@ -59,11 +66,16 @@ export default function SiteFooter() {
         <div className="footer-cols">
           {footerColumns.map((col) => (
             <nav key={col.title} aria-label={t(footerTranslations[col.title])}>
-              <h3>{t(footerTranslations[col.title])}</h3>
+              <h3 className="font-bold text-neutral-900 dark:text-white">
+                {t(footerTranslations[col.title])}
+              </h3>
               <ul className="mt-2">
                 {col.links.map((link) => (
                   <li key={link.label}>
-                    <Link href={link.href} className="footer-link">
+                    <Link
+                      href={link.href}
+                      className="footer-link text-neutral-600 transition-colors hover:text-[#000099] dark:text-neutral-400 dark:hover:text-white"
+                    >
                       {t(footerTranslations[link.label])}
                     </Link>
                   </li>
@@ -78,7 +90,13 @@ export default function SiteFooter() {
           <ul className="socials">
             {socials.map((s) => (
               <li key={s.name}>
-                <a href={s.href} aria-label={s.name} className="icon-btn">
+                <a
+                  href={s.href}
+                  aria-label={s.name}
+                  className="icon-btn"
+                  target={s.name === "Facebook" ? "_blank" : undefined}
+                  rel={s.name === "Facebook" ? "noopener noreferrer" : undefined}
+                >
                   <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
                     <path d={s.path} />
                   </svg>

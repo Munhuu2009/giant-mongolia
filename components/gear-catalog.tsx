@@ -1,22 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Backpack, Footprints, Lightbulb, Shirt, ShieldCheck, ShoppingBag, Wrench } from "lucide-react";
+import Image from "next/image";
+import { ShoppingBag } from "lucide-react";
 import { useCart } from "@/components/cart-context";
 import { useLanguage } from "@/components/language-provider";
-import { gearCategories, gearProducts, type GearArtwork, type GearCategory } from "@/data/gearData";
+import { gearCategories, gearProducts, type GearCategory } from "@/data/gearData";
 import { formatMnt } from "@/data/products";
 
 type SortOption = "all" | "price-asc" | "new";
-
-const categoryIcons: Record<GearArtwork, typeof ShoppingBag> = {
-  helmet: ShieldCheck,
-  apparel: Shirt,
-  shoes: Footprints,
-  light: Lightbulb,
-  pump: Wrench,
-  bag: Backpack,
-};
 
 const categoryTranslations: Record<GearCategory, string> = {
   helmets: "Дуулга",
@@ -105,15 +97,19 @@ export default function GearCatalog() {
           aria-labelledby={`gear-tab-${activeCategory}`}
         >
           {visibleProducts.map((product) => {
-            const Icon = categoryIcons[product.artwork];
             return (
-              <article key={product.id} className="gear-product-card">
-                <div className={`gear-product-card__artwork gear-product-card__artwork--${product.artwork}`}>
+              <article key={product.id} className="gear-product-card group">
+                <div className="gear-product-card__artwork relative flex h-56 w-full items-center justify-center overflow-hidden rounded-t-sm bg-[#F6F7F9] p-4">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-contain transition-transform duration-300 group-hover:scale-105"
+                  />
                   {product.badge && (
                     <span className="gear-product-card__badge">{translate(product.badge)}</span>
                   )}
-                  <Icon aria-hidden="true" className="gear-product-card__icon" strokeWidth={1.2} />
-                  <span className="gear-product-card__wordmark">GIANT</span>
                 </div>
                 <div className="gear-product-card__body">
                   <p className="gear-product-card__category">
@@ -137,7 +133,7 @@ export default function GearCatalog() {
                     onClick={() => addToCart({
                       productId: product.id,
                       name: product.name,
-                      image: "",
+                      image: product.image,
                       size: localized("One size", "Нэг хэмжээ"),
                       color: "#6B7280",
                       colorName: localized("Standard", "Стандарт"),

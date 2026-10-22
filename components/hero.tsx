@@ -24,21 +24,19 @@ const features = [
   },
 ];
 
-const reveal = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
 export default function Hero() {
   const { t, translate } = useLanguage();
   const [activeFeature, setActiveFeature] = useState<number | null>(null);
 
   return (
-    <section aria-labelledby="hero-heading" className="hero hero--showcase">
+    <motion.section
+      aria-labelledby="hero-heading"
+      className="hero hero--showcase"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="hero__product-stage" aria-label={translate("Giant gravel bicycle showcase")}>
         <Image
           src="/images/giant1.jpg"
@@ -73,13 +71,7 @@ export default function Hero() {
       ))}
 
       <div className="hero__showcase-copy">
-        <motion.div
-          className="hero__showcase-content max-w-xl relative z-10 space-y-6"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={reveal}
-        >
+        <div className="hero__showcase-content max-w-xl relative z-10 space-y-6">
           <p className="hero__showcase-eyebrow">{t("hero.category")}</p>
           <h1
             id="hero-heading"
@@ -93,7 +85,7 @@ export default function Hero() {
               {t("hero.cta")}
             </ButtonLink>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
 
       <div className="hero__showcase-footer">
@@ -123,6 +115,6 @@ export default function Hero() {
           </figcaption>
         </motion.figure>
       </div>
-    </section>
+    </motion.section>
   );
 }

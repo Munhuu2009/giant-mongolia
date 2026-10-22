@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import { ArrowRight, Heart } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
@@ -27,19 +28,39 @@ export default function ProductCard({
     : `Save ${product.name} to wishlist`;
 
   return (
-    <article className={`product-card${isFeatured ? " product-card--featured" : ""}`}>
-      <div className="product-card__media on-photo">
-        <Image
-          src={product.image}
-          alt={
-            language === "mn"
-              ? `${product.name} ${translate(product.category)} дугуй`
-              : `${product.name} ${product.category} bike`
-          }
-          fill
-          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-          className="zoom"
-        />
+    <article
+      className={`product-card${isFeatured ? " product-card--featured group border border-neutral-200 bg-white p-5 shadow-sm transition-all hover:border-[#000099] dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-[#000099]" : ""}`}
+    >
+      <div
+        className={`product-card__media on-photo${isFeatured ? " rounded-sm bg-[#F2F4F7] p-4 dark:bg-neutral-800/80" : ""}`}
+      >
+        {isFeatured ? (
+          <div className="absolute inset-4">
+            <Image
+              src={product.image}
+              alt={
+                language === "mn"
+                  ? `${product.name} ${translate(product.category)} дугуй`
+                  : `${product.name} ${product.category} bike`
+              }
+              fill
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+              className="zoom object-contain"
+            />
+          </div>
+        ) : (
+          <Image
+            src={product.image}
+            alt={
+              language === "mn"
+                ? `${product.name} ${translate(product.category)} дугуй`
+                : `${product.name} ${product.category} bike`
+            }
+            fill
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            className="zoom"
+          />
+        )}
         {isFeatured
           ? promotionBadge && (
               <span
@@ -65,15 +86,24 @@ export default function ProductCard({
       </div>
 
       <div className="product-card__body">
-        <p className="type-label">{translate(product.category)}</p>
-        <h3 className="type-title mt-1">{product.name}</h3>
-        <p className="product-card__price">{formatMnt(product.priceMnt)}</p>
+        <p className={`type-label${isFeatured ? " text-neutral-500 dark:text-neutral-400" : ""}`}>
+          {translate(product.category)}
+        </p>
+        <h3 className={`type-title mt-1${isFeatured ? " font-bold text-neutral-900 dark:text-white" : ""}`}>
+          {product.name}
+        </h3>
+        <p className={`product-card__price${isFeatured ? " text-lg font-extrabold text-neutral-900 dark:text-white" : ""}`}>
+          {formatMnt(product.priceMnt)}
+        </p>
 
         <div>
           <p className="sr-only">{translate("Available sizes")}</p>
           <ul className="size-list">
             {product.sizes.map((size) => (
-              <li key={size} className="size-chip">
+              <li
+                key={size}
+                className={`size-chip${isFeatured ? " bg-neutral-100 text-neutral-700 hover:bg-[#000099] hover:text-white dark:bg-neutral-800 dark:text-neutral-300" : ""}`}
+              >
                 {size}
               </li>
             ))}
@@ -81,11 +111,20 @@ export default function ProductCard({
         </div>
 
         {isFeatured ? (
-          <Link href={product.href} className="product-card__learn-more">
-            {translate("Learn more")}
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            <span className="sr-only">{`: ${product.name}`}</span>
-          </Link>
+          <motion.div
+            className="product-card__learn-more-wrap"
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Link
+              href={product.href}
+              className="product-card__learn-more text-neutral-900 transition-colors dark:text-white group-hover:text-[#000099] dark:group-hover:text-blue-400"
+            >
+              {translate("Learn more")}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <span className="sr-only">{`: ${product.name}`}</span>
+            </Link>
+          </motion.div>
         ) : (
           <ButtonLink href={product.href} variant="secondary" size="md" className="btn-block product-card__cta">
             {translate("View bike")}

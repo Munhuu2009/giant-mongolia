@@ -50,20 +50,21 @@ export default function DisciplineGrid() {
   const { t, translate } = useLanguage();
 
   return (
-    <section id="disciplines" aria-labelledby="disciplines-heading" className="section discipline-section">
+    <motion.section
+      id="disciplines"
+      aria-labelledby="disciplines-heading"
+      className="section discipline-section"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="discipline-wrap">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <SectionHeading
-            id="disciplines-heading"
-            eyebrow={t("disciplines.eyebrow")}
-            title={t("disciplines.title")}
-          />
-        </motion.div>
+        <SectionHeading
+          id="disciplines-heading"
+          eyebrow={t("disciplines.eyebrow")}
+          title={t("disciplines.title")}
+        />
 
         <motion.ul
           className="discipline-grid"
@@ -96,6 +97,6 @@ export default function DisciplineGrid() {
           ))}
         </motion.ul>
       </div>
-    </section>
+    </motion.section>
   );
 }

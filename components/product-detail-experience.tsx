@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/components/cart-context";
@@ -324,10 +325,12 @@ export default function ProductDetailExperience({ product }: { product: Product 
               <Plus aria-hidden="true" />
             </button>
           </div>
-          <button
+          <motion.button
             type="button"
             className="product-add-to-cart"
             disabled={!selectedSize}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.2 }}
             onClick={() => addToCart({
               productId: product.id,
               name: product.name,
@@ -340,7 +343,7 @@ export default function ProductDetailExperience({ product }: { product: Product 
             })}
           >
             {localized("ADD TO CART", "САГСАНД НЭМЭХ")}
-          </button>
+          </motion.button>
         </div>
       </div>
       <div className="product-cart-spacer" aria-hidden="true" />

@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
+import BikeCatalog from "@/components/bike-catalog";
 import PageIntro from "@/components/page-intro";
-import ProductCard from "@/components/product-card";
-import LocalizedText from "@/components/localized-text";
-import { getDisciplineById } from "@/data/disciplines";
+import type { BikeCategory } from "@/data/bikesData";
 import { bikesPage } from "@/data/pages";
-import { getProductsByDiscipline } from "@/data/products";
 
 export const metadata: Metadata = {
   title: "Bikes",
@@ -24,37 +22,25 @@ export default async function BikesPage({
 }) {
   const params = await searchParams;
   const disciplineId = firstParam(params.discipline);
-  const discipline = getDisciplineById(disciplineId);
-  const list = getProductsByDiscipline(discipline?.id);
-
-  const title = discipline ? `${discipline.name} bikes` : bikesPage.title;
-  const lead = discipline
-    ? `Giant ${discipline.name.toLowerCase()} bikes available at Giant Mongolia. ${discipline.tagline}.`
-    : bikesPage.lead;
+  const initialCategory: BikeCategory | "all" =
+    disciplineId === "ebike" ||
+    disciplineId === "road" ||
+    disciplineId === "gravel" ||
+    disciplineId === "mountain" ||
+    disciplineId === "city" ||
+    disciplineId === "kids"
+      ? disciplineId
+      : "all";
 
   return (
     <main>
-      <PageIntro id="bikes-heading" eyebrow={bikesPage.eyebrow} title={title} lead={lead} />
-
-      <section aria-labelledby="bikes-heading" className="section">
-        <div className="wrap">
-          {list.length === 0 ? (
-            <LocalizedText
-              as="p"
-              className="type-lead"
-              text="No bikes in this category yet. Check back soon or browse the full range."
-            />
-          ) : (
-            <ul className="product-grid">
-              {list.map((product) => (
-                <li key={product.id}>
-                  <ProductCard product={product} />
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </section>
+      <PageIntro
+        id="bikes-heading"
+        eyebrow={bikesPage.eyebrow}
+        title={bikesPage.title}
+        lead={bikesPage.lead}
+      />
+      <BikeCatalog initialCategory={initialCategory} />
     </main>
   );
 }

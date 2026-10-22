@@ -18,7 +18,7 @@ export default function StoresPage() {
         title={storesPage.title}
         lead={storesPage.lead}
       />
-      <FlagshipStore />
+      <FlagshipStore showGallery />
     </main>
   );
 }

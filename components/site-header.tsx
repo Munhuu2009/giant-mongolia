@@ -99,7 +99,12 @@ export default function SiteHeader() {
             </button>
             <nav aria-label={t("nav.primary")} className="site-nav">
               {primaryLinks.map((link) => (
-                <Link key={link.key} href={link.href} className="nav-link">
+                <Link
+                  key={link.key}
+                  href={link.href}
+                  className={`nav-link${pathname === link.href || (link.href === "/bikes" && pathname.startsWith("/bikes")) ? " is-active" : ""}`}
+                  aria-current={pathname === link.href || (link.href === "/bikes" && pathname.startsWith("/bikes")) ? "page" : undefined}
+                >
                   {t(link.key)}
                 </Link>
               ))}
