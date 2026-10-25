@@ -20,17 +20,17 @@ const riderHeights: Record<string, string> = {
   XL: "190–200 cm",
 };
 
-const colorways = [
+const defaultColorways = [
   { name: "Charcoal", hex: "#17191D", filter: "grayscale(0.75) brightness(0.78)" },
   { name: "Blue", hex: "#000099", filter: "hue-rotate(15deg) saturate(1.25)" },
   { name: "Red", hex: "#D5222B", filter: "hue-rotate(135deg) saturate(1.15)" },
   { name: "White", hex: "#E7E8EA", filter: "grayscale(0.85) brightness(1.16)" },
 ];
 
-const galleryViews = [
-  { label: "Full bike", position: "50% 50%", scale: 1 },
-  { label: "Frame detail", position: "38% 45%", scale: 1.35 },
-  { label: "Rear detail", position: "72% 60%", scale: 1.35 },
+const defaultGalleryViews = [
+  { label: "Full bike", position: "50% 50%", scale: 1, src: undefined },
+  { label: "Frame detail", position: "38% 45%", scale: 1.35, src: undefined },
+  { label: "Rear detail", position: "72% 60%", scale: 1.35, src: undefined },
 ];
 
 function normalizedSize(size: string) {
@@ -46,6 +46,16 @@ export default function ProductDetailExperience({ product }: { product: Product 
   const { addToCart } = useCart();
   const localized = (english: string, mongolian: string) =>
     language === "mn" ? mongolian : english;
+  const colorways = product.colorways?.map((color) => ({
+    ...color,
+    filter: color.filter ?? "none",
+  })) ?? defaultColorways;
+  const galleryViews = product.galleryImages?.map((src, index) => ({
+    src,
+    label: index === 0 ? localized("Full bike", "Дугуй бүтнээрээ") : `${localized("Detail", "Дэлгэрэнгүй")} ${index}`,
+    position: "50% 50%",
+    scale: 1,
+  })) ?? defaultGalleryViews;
   const availableSizes = new Set(product.sizes.map(normalizedSize));
   const sizeOptions = [
     ...standardSizes,
@@ -59,9 +69,14 @@ export default function ProductDetailExperience({ product }: { product: Product 
   const [quantity, setQuantity] = useState(1);
   const colorway = colorways[selectedColor];
   const galleryImage = galleryViews[selectedImage];
+  const sizeGuideOptions = product.sizes.some((size) => size !== normalizedSize(size))
+    ? product.sizes
+    : standardSizes;
   const price = language === "mn"
     ? `₮${product.priceMnt.toLocaleString("en-US")}`
-    : formatUsdFromMnt(product.priceMnt);
+    : product.priceUsd !== undefined
+      ? `$${product.priceUsd.toLocaleString("en-US")}`
+      : formatUsdFromMnt(product.priceMnt);
   const technicalSpecifications = [
     {
       label: "Frame",
@@ -91,7 +106,7 @@ export default function ProductDetailExperience({ product }: { product: Product 
           <div className="product-gallery__stage">
             <Image
               key={`${colorway.name}-${selectedImage}`}
-              src={product.image}
+              src={galleryImage.src ?? product.image}
               alt={`${product.name} ${colorway.name} ${galleryImage.label}`}
               fill
               priority
@@ -120,7 +135,7 @@ export default function ProductDetailExperience({ product }: { product: Product 
                 aria-pressed={selectedImage === index}
               >
                 <Image
-                  src={product.image}
+                  src={view.src ?? product.image}
                   alt=""
                   fill
                   sizes="100px"
@@ -140,7 +155,7 @@ export default function ProductDetailExperience({ product }: { product: Product 
           <p className="type-label">{translate(product.category)}</p>
           <h1 id="product-title" className="type-headline mt-2">{product.name}</h1>
           <p className="product-detail__price">{price}</p>
-          {language === "en" && (
+          {language === "en" && product.priceUsd === undefined && (
             <p className="product-price-note">Estimated conversion from MNT</p>
           )}
           <p className="product-detail__copy">{translate(product.description)}</p>
@@ -218,13 +233,17 @@ export default function ProductDetailExperience({ product }: { product: Product 
                   </tr>
                 </thead>
                 <tbody>
-                  {standardSizes.map((size) => (
-                    <tr key={size}>
-                      <th scope="row">{size}</th>
-                      <td>{riderHeights[size]}</td>
-                      <td>{availableSizes.has(size) ? localized("In stock", "Бэлэн") : localized("Out of stock", "Дууссан")}</td>
-                    </tr>
-                  ))}
+                  {sizeGuideOptions.map((size) => {
+                    const baseSize = size.match(/^(XS|S|M\/L|M|L|XL)(?=\s|$)/)?.[1] ?? size;
+                    const normalizedBaseSize = normalizedSize(baseSize);
+                    return (
+                      <tr key={size}>
+                        <th scope="row">{size}</th>
+                        <td>{riderHeights[normalizedBaseSize]}</td>
+                        <td>{availableSizes.has(normalizedSize(size)) ? localized("In stock", "Бэлэн") : localized("Out of stock", "Дууссан")}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -340,6 +359,7 @@ export default function ProductDetailExperience({ product }: { product: Product 
               colorName: colorway.name,
               quantity,
               priceMnt: product.priceMnt,
+              priceUsd: product.priceUsd,
             })}
           >
             {localized("ADD TO CART", "САГСАНД НЭМЭХ")}

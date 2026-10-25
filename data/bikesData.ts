@@ -1,5 +1,11 @@
 export type BikeCategory = "road" | "gravel" | "mountain" | "ebike" | "city" | "kids";
 
+export type BikeColorway = {
+  name: string;
+  hex: string;
+  filter?: string;
+};
+
 export type BikeCatalogItem = {
   id: string;
   slug: string;
@@ -8,9 +14,12 @@ export type BikeCatalogItem = {
   categoryMn: string;
   categoryId: BikeCategory;
   priceMnt: number;
+  priceUsd?: number;
   sizes: string[];
   image: string;
-  badge?: "new" | "ebike" | "kids";
+  galleryImages?: string[];
+  colorways?: BikeColorway[];
+  badge?: "new" | "ebike" | "kids" | "best-seller";
 };
 
 const images: Record<BikeCategory, string> = {
@@ -31,6 +40,7 @@ function bike(
   priceMnt: number,
   sizes: string[],
   badge?: BikeCatalogItem["badge"],
+  options: Pick<BikeCatalogItem, "priceUsd" | "image" | "galleryImages" | "colorways"> = {},
 ): BikeCatalogItem {
   return {
     id: slug,
@@ -42,6 +52,7 @@ function bike(
     priceMnt,
     sizes,
     image: images[categoryId],
+    ...options,
     ...(badge ? { badge } : {}),
   };
 }
@@ -66,7 +77,32 @@ export const bikesData: BikeCatalogItem[] = [
   bike("reign-advanced-pro-29-1", "Giant Reign Advanced Pro 29 1", "mountain", "Enduro", "Эндуро", 22_500_000, ["S", "M", "L"]),
   bike("stance-29-2", "Giant Stance 29 2", "mountain", "Trail Full Suspension", "Трейл / Бүтэн түдгэлзүүлэлт", 5_800_000, ["S", "M", "L", "XL"]),
   bike("fathom-2", "Giant Fathom 2", "mountain", "XC Hardtail", "Кросс кантри / Хатуу сэрээ", 3_850_000, ["S", "M", "L", "XL"]),
-  bike("talon-1", "Giant Talon 1", "mountain", "Trail Hardtail", "Трейл / Хатуу сэрээ", 2_850_000, ["XS", "S", "M", "L", "XL"]),
+  bike(
+    "talon-1",
+    "GIANT TALON 1",
+    "mountain",
+    "Mountain / Cross Country",
+    "Уулын / Хатуу рамтай",
+    4_250_000,
+    ['XS (27.5")', 'S (27.5")', 'S (29")', 'M (29")', 'L (29")', 'XL (29")'],
+    "best-seller",
+    {
+      priceUsd: 1249,
+      image: "/images/giantvid15.jpg",
+      galleryImages: [
+        "/images/giantvid15.jpg",
+        "/images/giantvid10.jpg",
+        "/images/giantvid11.jpg",
+        "/images/giantvid12.jpg",
+        "/images/giantvid13.jpg",
+        "/images/giantvid14.jpg",
+      ],
+      colorways: [
+        { name: "Charcoal", hex: "#4A4D4F", filter: "grayscale(0.75) brightness(0.78)" },
+        { name: "Blue", hex: "#38B6FF", filter: "hue-rotate(165deg) saturate(1.25)" },
+      ],
+    },
+  ),
 
   bike("reign-advanced-e-plus-0", "Giant Reign Advanced E+ 0", "ebike", "E-MTB", "Цахилгаан уулын дугуй", 31_500_000, ["S", "M", "L"], "ebike"),
   bike("trance-advanced-e-plus-1", "Giant Trance Advanced E+ 1", "ebike", "E-MTB", "Цахилгаан уулын дугуй", 24_500_000, ["S", "M", "L", "XL"], "ebike"),

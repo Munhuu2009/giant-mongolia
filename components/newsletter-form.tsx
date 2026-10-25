@@ -28,19 +28,26 @@ export default function NewsletterForm() {
       <label htmlFor="newsletter-email" className="sr-only">
         {t("newsletter.email")}
       </label>
-      <input
-        id="newsletter-email"
-        type="email"
-        name="email"
-        required
-        autoComplete="email"
-        placeholder={t("newsletter.placeholder")}
-        className="field"
-      />
-      <Button type="submit" variant="primary" size="lg">
-        {t("newsletter.submit")}
-        <ArrowRight className="arrow h-5 w-5" aria-hidden="true" />
-      </Button>
+      <div className="newsletter__glass">
+        <input
+          id="newsletter-email"
+          type="email"
+          name="email"
+          required
+          autoComplete="email"
+          placeholder={t("newsletter.placeholder")}
+          className="newsletter__input"
+        />
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          className="newsletter__submit"
+        >
+          {t("newsletter.submit")}
+          <ArrowRight className="arrow h-5 w-5" aria-hidden="true" />
+        </Button>
+      </div>
     </form>
   );
 }

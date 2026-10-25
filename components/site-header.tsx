@@ -40,8 +40,8 @@ export default function SiteHeader() {
 
   useEffect(() => {
     if (!open) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const root = document.documentElement;
+    root.classList.add("site-drawer-lock");
     closeButtonRef.current?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -69,7 +69,7 @@ export default function SiteHeader() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => {
-      document.body.style.overflow = previousOverflow;
+      root.classList.remove("site-drawer-lock");
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [open]);
@@ -84,7 +84,7 @@ export default function SiteHeader() {
   return (
     <>
       <header className={`site-header${overlay ? " site-header--overlay" : ""}${scrolled ? " site-header--scrolled" : ""}`}>
-        <div className="wrap site-header__bar">
+        <div className="site-header__bar">
           <div className="site-header__left">
             <button
               ref={menuButtonRef}
@@ -111,9 +111,11 @@ export default function SiteHeader() {
             </nav>
           </div>
 
-          <Link href="/" aria-label={translate("Giant Mongolia home")} className="site-header__brand">
-            <Logo className="w-auto" inverted={overlay} />
-          </Link>
+          <div className="site-header__center">
+            <Link href="/" aria-label={translate("Giant Mongolia home")} className="site-header__brand">
+              <Logo className="w-auto" inverted={overlay} />
+            </Link>
+          </div>
 
           <div className="site-header__actions">
             <button

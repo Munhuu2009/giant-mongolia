@@ -16,14 +16,14 @@ const galleryImages = [
     },
   },
   {
-    src: "/images/giant2.webp",
+    src: "/images/giant3.webp",
     alt: {
       en: "Bicycle showroom display",
       mn: "Дугуйн үзэсгэлэнгийн талбай",
     },
   },
   {
-    src: "/images/giant2.webp",
+    src: "/images/giant4.webp",
     alt: {
       en: "Bicycle equipment and accessories",
       mn: "Дугуйн хэрэгсэл болон дагалдах хэрэгсэл",
@@ -66,9 +66,11 @@ export default function FlagshipStore({ showGallery = false }: FlagshipStoreProp
           <p className="type-lead mt-5">{t("store.description")}</p>
 
           <dl className="info-grid">
-            <div className="glass-card">
+            <div className="glass-card flagship-store-card">
               <dt>
-                <MapPin className="h-4 w-4" aria-hidden="true" />
+                <span className="flagship-store-card__icon">
+                  <MapPin className="h-4 w-4" aria-hidden="true" />
+                </span>
                 {t("store.address")}
               </dt>
               <dd>
@@ -77,16 +79,20 @@ export default function FlagshipStore({ showGallery = false }: FlagshipStoreProp
                 </a>
               </dd>
             </div>
-            <div className="glass-card">
+            <div className="glass-card flagship-store-card">
               <dt>
-                <Clock className="h-4 w-4" aria-hidden="true" />
+                <span className="flagship-store-card__icon">
+                  <Clock className="h-4 w-4" aria-hidden="true" />
+                </span>
                 {t("store.hours")}
               </dt>
               <dd>{t("store.dailyHours")}</dd>
             </div>
-            <div className="glass-card">
+            <div className="glass-card flagship-store-card">
               <dt>
-                <Phone className="h-4 w-4" aria-hidden="true" />
+                <span className="flagship-store-card__icon">
+                  <Phone className="h-4 w-4" aria-hidden="true" />
+                </span>
                 {t("store.phone")}
               </dt>
               <dd>
@@ -102,6 +108,7 @@ export default function FlagshipStore({ showGallery = false }: FlagshipStoreProp
               rel="noopener noreferrer"
               variant="glass-strong"
               size="lg"
+              className="flagship-store-cta"
             >
               {t("store.directions")}
               <ArrowRight className="arrow h-5 w-5" aria-hidden="true" />

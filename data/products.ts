@@ -2,7 +2,7 @@
 // Names, prices (MNT), and sizes below are illustrative only.
 
 import { getDisciplineById } from "./disciplines";
-import { bikesData } from "./bikesData";
+import { bikesData, type BikeColorway } from "./bikesData";
 
 export type ProductSpec = {
   label: string;
@@ -15,8 +15,11 @@ export type Product = {
   name: string;
   category: string;
   priceMnt: number;
+  priceUsd?: number;
   sizes: string[];
   image: string;
+  galleryImages?: string[];
+  colorways?: BikeColorway[];
   href: string;
   badge?: string;
   description: string;
@@ -201,7 +204,15 @@ const originalProducts: Product[] = [
 export const products: Product[] = bikesData.map((bike) => {
   const original = originalProducts.find((product) => product.slug === bike.slug);
   const badge =
-    bike.badge === "new" ? "New" : bike.badge === "ebike" ? "E-Bike" : bike.badge === "kids" ? "Kids" : undefined;
+    bike.badge === "new"
+      ? "New"
+      : bike.badge === "ebike"
+        ? "E-Bike"
+        : bike.badge === "kids"
+          ? "Kids"
+          : bike.badge === "best-seller"
+            ? "Best Seller"
+            : undefined;
 
   return {
     id: bike.id,
@@ -209,8 +220,11 @@ export const products: Product[] = bikesData.map((bike) => {
     name: bike.name,
     category: bike.category,
     priceMnt: bike.priceMnt,
+    priceUsd: bike.priceUsd,
     sizes: bike.sizes,
     image: bike.image,
+    galleryImages: bike.galleryImages,
+    colorways: bike.colorways,
     href: `/bikes/${bike.slug}`,
     badge,
     description:

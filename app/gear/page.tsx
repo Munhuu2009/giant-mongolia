@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import PageIntro from "@/components/page-intro";
 import GearCatalog from "@/components/gear-catalog";
-import { gearPage } from "@/data/pages";
+import GearVideoHero from "@/components/gear-video-hero";
 
 export const metadata: Metadata = {
   title: "Gear",
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
 export default function GearPage() {
   return (
     <main>
-      <PageIntro id="gear-heading" eyebrow={gearPage.eyebrow} title={gearPage.title} lead={gearPage.lead} />
+      <GearVideoHero />
       <GearCatalog />
     </main>
   );

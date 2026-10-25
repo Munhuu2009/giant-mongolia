@@ -35,11 +35,11 @@ export default function CartDrawer() {
 
   useEffect(() => {
     if (!isOpen) return;
-    const previousOverflow = document.body.style.overflow;
+    const root = document.documentElement;
     const previouslyFocused = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null;
-    document.body.style.overflow = "hidden";
+    root.classList.add("cart-lock");
     closeButtonRef.current?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -64,7 +64,7 @@ export default function CartDrawer() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => {
-      document.body.style.overflow = previousOverflow;
+      root.classList.remove("cart-lock");
       window.removeEventListener("keydown", onKeyDown);
       previouslyFocused?.focus();
     };

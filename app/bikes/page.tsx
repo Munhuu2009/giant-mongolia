@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import BikeCatalog from "@/components/bike-catalog";
-import PageIntro from "@/components/page-intro";
+import BikeVideoHero from "@/components/bike-video-hero";
 import type { BikeCategory } from "@/data/bikesData";
-import { bikesPage } from "@/data/pages";
 
 export const metadata: Metadata = {
   title: "Bikes",
@@ -34,12 +33,7 @@ export default async function BikesPage({
 
   return (
     <main>
-      <PageIntro
-        id="bikes-heading"
-        eyebrow={bikesPage.eyebrow}
-        title={bikesPage.title}
-        lead={bikesPage.lead}
-      />
+      <BikeVideoHero />
       <BikeCatalog initialCategory={initialCategory} />
     </main>
   );

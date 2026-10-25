@@ -6,7 +6,7 @@ import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
 import { bikeCategories, bikesData, type BikeCategory } from "@/data/bikesData";
-import { formatMnt } from "@/data/products";
+import { formatMnt, formatUsdFromMnt } from "@/data/products";
 
 type BikeCatalogProps = {
   initialCategory: BikeCategory | "all";
@@ -79,9 +79,13 @@ export default function BikeCatalog({ initialCategory }: BikeCatalogProps) {
                             ? language === "mn"
                               ? "ЦАХИЛГААН ДУГУЙ"
                               : "E-BIKE"
-                            : language === "mn"
-                              ? "ХҮҮХДИЙН"
-                              : "KIDS"}
+                            : bike.badge === "best-seller"
+                              ? language === "mn"
+                                ? "ЭРЭЛТТЭЙ"
+                                : "BEST SELLER"
+                              : language === "mn"
+                                ? "ХҮҮХДИЙН"
+                                : "KIDS"}
                       </span>
                     )}
                   </Link>
@@ -93,8 +97,28 @@ export default function BikeCatalog({ initialCategory }: BikeCatalogProps) {
                     {bike.name}
                   </h2>
                   <p className="mt-2 text-lg font-extrabold tabular-nums text-neutral-900 dark:text-white">
-                    {formatMnt(bike.priceMnt)}
+                    {language === "mn"
+                      ? formatMnt(bike.priceMnt)
+                      : bike.priceUsd !== undefined
+                        ? `$${bike.priceUsd.toLocaleString("en-US")}`
+                        : formatUsdFromMnt(bike.priceMnt)}
                   </p>
+                  {bike.colorways && (
+                    <ul
+                      className="mt-3 flex flex-wrap gap-2"
+                      aria-label={language === "mn" ? "Өнгөний сонголтууд" : "Available colors"}
+                    >
+                      {bike.colorways.map((color) => (
+                        <li key={color.name}>
+                          <span
+                            className="block h-4 w-4 rounded-full border border-neutral-300 dark:border-neutral-600"
+                            style={{ backgroundColor: color.hex }}
+                            title={`${color.name} · ${color.hex}`}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                   <div
                     className="mt-4 flex flex-wrap gap-2"
                     role="group"
@@ -103,7 +127,7 @@ export default function BikeCatalog({ initialCategory }: BikeCatalogProps) {
                     {bike.sizes.map((size) => (
                       <span
                         key={size}
-                        className="rounded-sm bg-neutral-100 px-2.5 py-1 text-xs font-bold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                        className="whitespace-nowrap rounded-sm bg-neutral-100 px-2.5 py-1 text-xs font-bold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
                       >
                         {size}
                       </span>

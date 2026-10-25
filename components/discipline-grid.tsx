@@ -10,25 +10,25 @@ const rideCategories = [
   {
     key: "category.ebikes",
     href: "/bikes?discipline=ebike",
-    image: "/images/ride-ebike.jpg",
+    image: "/images/ebike1.jpg",
     alt: "Rider with a fat-tire electric bicycle in open mountain country",
   },
   {
     key: "category.road",
     href: "/bikes?discipline=road",
-    image: "/images/ride-road.jpg",
+    image: "/images/road2.jpg",
     alt: "Road cyclists riding together in a race",
   },
   {
     key: "category.mountain",
     href: "/bikes?discipline=mountain",
-    image: "/images/ride-mountain.jpg",
+    image: "/images/mountain1.jpg",
     alt: "Mountain bikers riding a dirt trail outdoors",
   },
   {
     key: "category.womens",
     href: "/bikes",
-    image: "/images/ride-womens.jpg",
+    image: "/images/women1.jpg",
     alt: "Two women riding road bikes along an outdoor coastal road",
   },
 ] as const;
@@ -53,7 +53,7 @@ export default function DisciplineGrid() {
     <motion.section
       id="disciplines"
       aria-labelledby="disciplines-heading"
-      className="section discipline-section"
+      className="section discipline-section py-20"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}

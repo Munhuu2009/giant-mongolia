@@ -93,7 +93,9 @@ export default function ProductCard({
           {product.name}
         </h3>
         <p className={`product-card__price${isFeatured ? " text-lg font-extrabold text-neutral-900 dark:text-white" : ""}`}>
-          {formatMnt(product.priceMnt)}
+          {product.priceUsd !== undefined && language === "en"
+            ? `$${product.priceUsd.toLocaleString("en-US")}`
+            : formatMnt(product.priceMnt)}
         </p>
 
         <div>

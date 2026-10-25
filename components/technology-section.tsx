@@ -1,14 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/components/language-provider";
 
 const technologies = [
   {
     id: "advanced-sl",
+    hotspotId: "carbon",
     category: { en: "COMPOSITE ENGINEERING", mn: "НИЙЛМЭЛ МАТЕРИАЛЫН ИНЖЕНЕРЧЛЭЛ" },
     title: { en: "ADVANCED SL COMPOSITE", mn: "ADVANCED SL КАРБОН МАТЕРИАЛ" },
     description: {
@@ -27,6 +27,7 @@ const technologies = [
   },
   {
     id: "maestro",
+    hotspotId: "powercore",
     category: { en: "SUSPENSION DESIGN", mn: "ТҮДГЭЛЗҮҮЛЭЛТИЙН ХИЙЦ" },
     title: { en: "MAESTRO SUSPENSION", mn: "MAESTRO ТҮДГЭЛЗҮҮЛЭЛТ" },
     description: {
@@ -45,6 +46,7 @@ const technologies = [
   },
   {
     id: "syncdrive",
+    hotspotId: "powercore",
     category: { en: "E-BIKE SYSTEMS", mn: "ЦАХИЛГААН ДУГУЙН СИСТЕМ" },
     title: { en: "SYNCDRIVE PRO MOTOR", mn: "SYNCDRIVE PRO ЦАХИЛГААН МОТОР" },
     description: {
@@ -63,6 +65,7 @@ const technologies = [
   },
   {
     id: "d-fuse",
+    hotspotId: "cockpit",
     category: { en: "COMFORT ENGINEERING", mn: "ТАВ ТУХЫН ИНЖЕНЕРЧЛЭЛ" },
     title: { en: "D-FUSE TECHNOLOGY", mn: "D-FUSE ТЕХНОЛОГИ" },
     description: {
@@ -81,6 +84,7 @@ const technologies = [
   },
   {
     id: "overdrive-aero",
+    hotspotId: "cockpit",
     category: { en: "AERODYNAMIC DESIGN", mn: "АЭРОДИНАМИК ХИЙЦ" },
     title: { en: "OVERDRIVE AERO", mn: "OVERDRIVE AERO" },
     description: {
@@ -99,6 +103,7 @@ const technologies = [
   },
   {
     id: "aluxx-sl",
+    hotspotId: "powercore",
     category: { en: "ALUMINUM ENGINEERING", mn: "ХӨНГӨН ЦАГААНЫ ИНЖЕНЕРЧЛЭЛ" },
     title: { en: "ALUXX SL ALUMINUM", mn: "ALUXX SL ХӨНГӨН ЦАГААН ХАЙЛШ" },
     description: {
@@ -114,6 +119,39 @@ const technologies = [
       { en: "6061-series alloy", mn: "6061 цувралын хайлш" },
       { en: "Double-butted tubeset", mn: "Давхар зузаалгатай хоолойн хийц" },
     ],
+  },
+] as const;
+
+const hotspots = [
+  {
+    id: "cockpit",
+    title: "OVERDRIVE AERO",
+    position: "technology-hotspot--cockpit",
+    technologyIds: ["overdrive-aero", "d-fuse"],
+    detail: {
+      en: "D-shaped steerer tube & internal routing",
+      mn: "D хэлбэрийн жолооны гол ба дотор кабелийн суваг",
+    },
+  },
+  {
+    id: "carbon",
+    title: "ADVANCED SL CARBON",
+    position: "technology-hotspot--carbon",
+    technologyIds: ["advanced-sl"],
+    detail: {
+      en: "Raw carbon fiber weaving & max stiffness-to-weight ratio",
+      mn: "Түүхий карбон нэхээс ба жин-хөшүүн чанарын дээд харьцаа",
+    },
+  },
+  {
+    id: "powercore",
+    title: "POWERCORE & ALUXX SL",
+    position: "technology-hotspot--powercore",
+    technologyIds: ["maestro", "syncdrive", "aluxx-sl"],
+    detail: {
+      en: "Oversized bottom bracket stiffness & power transfer",
+      mn: "Томруулсан каретканы хөшүүн чанар ба хүч дамжуулалт",
+    },
   },
 ] as const;
 
@@ -143,37 +181,64 @@ const cardVariants = {
 export default function TechnologySection({ pageTitle = false }: { pageTitle?: boolean }) {
   const { language } = useLanguage();
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selectedTechnology = technologies.find((technology) => technology.id === selectedId);
   const Heading = pageTitle ? "h1" : "h2";
-
-  useEffect(() => {
-    if (!selectedTechnology) return;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelectedId(null);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [selectedTechnology]);
-
   const text = (value: { en: string; mn: string }) => value[language];
 
   return (
     <motion.section
       id="technology"
       aria-labelledby="technology-heading"
-      className="technology-section bg-white text-neutral-900 transition-colors duration-300 dark:bg-neutral-950 dark:text-white"
+      className="technology-section technology-diagram py-20"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
       variants={sectionReveal}
     >
+      <div className="technology-diagram__stage" aria-hidden="true">
+        <Image
+          src="/images/giantbike3.png"
+          alt="Giant Carbon Frame"
+          fill
+          priority={pageTitle}
+          sizes="100vw"
+          className="technology-diagram__image"
+        />
+        <div className="technology-diagram__scrim" />
+      </div>
+
+      <div
+        className="technology-hotspots"
+        role="group"
+        aria-label={language === "mn" ? "Рамын технологи" : "Frame technologies"}
+      >
+        {hotspots.map((hotspot) => {
+          const active = technologies.some(
+            (technology) =>
+              technology.id === selectedId && technology.hotspotId === hotspot.id,
+          );
+
+          return (
+            <button
+              key={hotspot.id}
+              type="button"
+              className={`technology-hotspot ${hotspot.position}${active ? " is-active" : ""}`}
+              aria-label={`${hotspot.title}: ${text(hotspot.detail)}`}
+              aria-pressed={active}
+              onClick={() => {
+                const technology = technologies.find(
+                  (item) => item.hotspotId === hotspot.id,
+                );
+                setSelectedId(technology?.id ?? null);
+              }}
+            >
+              <span className="technology-hotspot__pulse" aria-hidden="true" />
+              <span className="technology-hotspot__label">{hotspot.title}</span>
+              <span className="technology-hotspot__detail">{text(hotspot.detail)}</span>
+            </button>
+          );
+        })}
+      </div>
+
       <div className="technology-section__inner">
         <motion.header className="technology-hero" variants={sectionReveal}>
           <p className="technology-hero__badge">
@@ -203,12 +268,14 @@ export default function TechnologySection({ pageTitle = false }: { pageTitle?: b
             <motion.button
               key={technology.id}
               type="button"
-              className="technology-card bg-neutral-50 border border-neutral-200 hover:border-[#000099] transition-all duration-300 dark:bg-neutral-900/80 dark:border-neutral-800 dark:hover:border-[#000099]"
+              className={`technology-card${selectedId === technology.id ? " is-active" : ""}`}
               variants={cardVariants}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.99 }}
-              onClick={() => setSelectedId(technology.id)}
-              aria-haspopup="dialog"
+              onClick={() =>
+                setSelectedId(selectedId === technology.id ? null : technology.id)
+              }
+              aria-pressed={selectedId === technology.id}
             >
               <span className="technology-card__category">
                 <span aria-hidden="true" />
@@ -217,59 +284,12 @@ export default function TechnologySection({ pageTitle = false }: { pageTitle?: b
               <h2>{text(technology.title)}</h2>
               <p>{text(technology.description)}</p>
               <span className="technology-card__action">
-                {language === "mn" ? "ДЭЛГЭРЭНГҮЙ ҮЗЭХ" : "EXPLORE TECHNOLOGY"}
+                {language === "mn" ? "РАМ ДЭЭР ТОДРУУЛАХ" : "HIGHLIGHT ON FRAME"}
               </span>
             </motion.button>
           ))}
         </motion.div>
       </div>
-
-      {selectedTechnology && (
-        <div
-          className="technology-modal-backdrop"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setSelectedId(null);
-          }}
-        >
-          <section
-            className="technology-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="technology-modal-heading"
-          >
-            <button
-              type="button"
-              className="technology-modal__close"
-              onClick={() => setSelectedId(null)}
-              aria-label={language === "mn" ? "Хаах" : "Close"}
-            >
-              <X aria-hidden="true" />
-            </button>
-            <div className="technology-modal__image">
-              <Image
-                src={selectedTechnology.image}
-                alt={text(selectedTechnology.alt)}
-                fill
-                sizes="(min-width: 768px) 50vw, 100vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="technology-modal__content">
-              <p className="technology-card__category">
-                <span aria-hidden="true" />
-                {text(selectedTechnology.category)}
-              </p>
-              <h2 id="technology-modal-heading">{text(selectedTechnology.title)}</h2>
-              <p>{text(selectedTechnology.description)}</p>
-              <ul>
-                {selectedTechnology.metrics.map((metric) => (
-                  <li key={metric.en}>{text(metric)}</li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        </div>
-      )}
     </motion.section>
   );
 }

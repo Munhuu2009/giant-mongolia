@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Montserrat } from "next/font/google";
+import { Geist_Mono, Montserrat, Unbounded } from "next/font/google";
 import CartDrawer from "@/components/CartDrawer";
 import { CartProvider } from "@/components/cart-context";
 import { LanguageProvider } from "@/components/language-provider";
@@ -10,12 +10,19 @@ import "./globals.css";
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   weight: ["400", "500", "600", "700", "800", "900"],
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const unbounded = Unbounded({
+  variable: "--font-display",
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
+  weight: ["700", "800"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -41,12 +48,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${montserrat.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${montserrat.variable} ${geistMono.variable} ${unbounded.variable} antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-screen flex flex-col overflow-x-clip">
         <LanguageProvider>
           <CartProvider>
             <SiteHeader />

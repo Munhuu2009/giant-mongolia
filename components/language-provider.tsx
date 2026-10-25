@@ -25,9 +25,59 @@ const enMessages = {
     "nav.forCity": "For city life",
     "nav.forFit": "For the perfect fit",
     "hero.category": "Bicycle / Gravel series",
-    "hero.title": "Ride Unleashed",
+    "hero.headline.left1": "Ride",
+    "hero.headline.left2": "Beyond",
+    "hero.headline.left3": "Limits",
+    "hero.headline.right1": "Spirit",
+    "hero.headline.right2": "With",
+    "hero.headline.right3": "Giant",
     "hero.description": "Explore Mongolia on a bike engineered for precision, speed, and terrain control.",
     "hero.cta": "Shop bicycles",
+    "hero.feature.design.title": "Innovate Design",
+    "hero.feature.design.description":
+      "Our bikes pair purposeful form with rider-first details for a confident, effortless ride.",
+    "hero.feature.engineering.title": "Precision Engineering",
+    "hero.feature.engineering.description":
+      "Every frame and component is tuned for responsive handling, lasting strength, and control.",
+    "hero.feature.performance.title": "Sustainable Performance",
+    "hero.feature.performance.description":
+      "Thoughtful materials and durable construction help make every ride better for the long run.",
+    "technology.story.eyebrow": "GIANT ENGINEERING",
+    "technology.story.heading": "Technology & Innovation",
+    "technology.story.tagline": "Six systems. One ride, refined.",
+    "technology.story.rail": "Technology story",
+    "technology.story.pause": "Pause showcase",
+    "technology.story.play": "Play showcase",
+    "technology.story.step01.category": "COMPOSITE ENGINEERING",
+    "technology.story.step01.title": "ADVANCED SL COMPOSITE",
+    "technology.story.step01.description": "Carbon woven in Giant's own factories for high stiffness at low weight.",
+    "technology.story.step01.stat": "Giant-made carbon",
+    "technology.story.step01.alt": "Close-up of the Propel Advanced SL head tube",
+    "technology.story.step02.category": "AERODYNAMIC DESIGN",
+    "technology.story.step02.title": "OVERDRIVE AERO",
+    "technology.story.step02.description": "D-shaped steerer with internal cables for aero efficiency.",
+    "technology.story.step02.stat": "Internal routing",
+    "technology.story.step02.alt": "Close-up of the Propel front end and integrated cables",
+    "technology.story.step03.category": "COMFORT ENGINEERING",
+    "technology.story.step03.title": "D-FUSE TECHNOLOGY",
+    "technology.story.step03.description": "D-shaped seatpost and bar that absorb vibration for comfort.",
+    "technology.story.step03.stat": "All-day comfort",
+    "technology.story.step03.alt": "Close-up of the D-Fuse handlebar and cockpit",
+    "technology.story.step04.category": "SUSPENSION DESIGN",
+    "technology.story.step04.title": "MAESTRO SUSPENSION",
+    "technology.story.step04.description": "Floating pivots give active suspension without pedal bob.",
+    "technology.story.step04.stat": "Zero pedal bob",
+    "technology.story.step04.alt": "Close-up of the Maestro e-bike rear shock",
+    "technology.story.step05.category": "E-BIKE SYSTEMS",
+    "technology.story.step05.title": "SYNCDRIVE PRO MOTOR",
+    "technology.story.step05.description": "Yamaha-powered, with Smart Assist automatic support.",
+    "technology.story.step05.stat": "85 Nm torque",
+    "technology.story.step05.alt": "Close-up of the SyncDrive Pro motor",
+    "technology.story.step06.category": "ALUMINUM ENGINEERING",
+    "technology.story.step06.title": "ALUXX SL ALUMINUM",
+    "technology.story.step06.description": "Double-butted 6061 alloy tubes, light and durable.",
+    "technology.story.step06.stat": "6061 alloy",
+    "technology.story.step06.alt": "Close-up of the Talon head tube and aluminum frame",
     "disciplines.eyebrow": "Shop by discipline",
     "disciplines.title": "Find Your Ride",
     "category.ebikes": "E-Bikes",
@@ -107,9 +157,59 @@ const mnMessages: Record<keyof typeof enMessages, string> = {
     "nav.forCity": "Хотын амьдралд",
     "nav.forFit": "Төгс тохиргоонд",
     "hero.category": "Унадаг дугуй / Гравел",
-    "hero.title": "БҮХ ТӨРЛИЙН ДУГУЙГ ЭНДЭЭС",
+    "hero.headline.left1": "ХЯЗГААРАА",
+    "hero.headline.left2": "ДАВЖ",
+    "hero.headline.left3": "УНА",
+    "hero.headline.right1": "GIANT",
+    "hero.headline.right2": "ТАНТАЙ",
+    "hero.headline.right3": "ХАМТ",
     "hero.description": "Нарийвчлал, хурд, замын барьцад зориулан бүтээгдсэн дугуйгаар Монголыг нээгээрэй.",
     "hero.cta": "Дугуй үзэх",
+    "hero.feature.design.title": "Шинэлэг дизайн",
+    "hero.feature.design.description":
+      "Зорилготой хийц, унаачдад зориулсан нарийн шийдэл нь итгэлтэй, хөнгөн мэдрэмж төрүүлнэ.",
+    "hero.feature.engineering.title": "Нарийн инженерчлэл",
+    "hero.feature.engineering.description":
+      "Рам болон эд анги бүрийг удирдлага, бат бөх чанар, шуурхай мэдрэмжид зориулан тохируулдаг.",
+    "hero.feature.performance.title": "Тогтвортой гүйцэтгэл",
+    "hero.feature.performance.description":
+      "Нарийн сонгосон материал, удаан эдэлгээтэй хийц нь аялал бүрийг илүү үнэ цэнтэй болгоно.",
+    "technology.story.eyebrow": "Giant-ийн инженерчлэл", // TODO native review
+    "technology.story.heading": "Технологи ба инноваци", // TODO native review
+    "technology.story.tagline": "Зургаан шийдэл. Нэг төгс уналт.", // TODO native review
+    "technology.story.rail": "Технологийн түүх", // TODO native review
+    "technology.story.pause": "Түр зогсоох", // TODO native review
+    "technology.story.play": "Үргэлжлүүлэх", // TODO native review
+    "technology.story.step01.category": "Нийлмэл материалын инженерчлэл", // TODO native review
+    "technology.story.step01.title": "ADVANCED SL КАРБОН", // TODO native review
+    "technology.story.step01.description": "Өөрийн үйлдвэрт нэхсэн карбон: хөнгөн, хөшүүн.", // TODO native review
+    "technology.story.step01.stat": "Giant-ийн карбон", // TODO native review
+    "technology.story.step01.alt": "Propel Advanced SL-ийн толгойн хоолойн ойрын зураг", // TODO native review
+    "technology.story.step02.category": "Аэродинамик хийц", // TODO native review
+    "technology.story.step02.title": "OVERDRIVE AERO", // TODO native review
+    "technology.story.step02.description": "D хэлбэрийн гол, далд кабель — аэро үр ашиг.", // TODO native review
+    "technology.story.step02.stat": "Далд кабель", // TODO native review
+    "technology.story.step02.alt": "Propel-ийн урд хэсэг, далд кабелийн ойрын зураг", // TODO native review
+    "technology.story.step03.category": "Тав тухын инженерчлэл", // TODO native review
+    "technology.story.step03.title": "D-FUSE ТЕХНОЛОГИ", // TODO native review
+    "technology.story.step03.description": "D хэлбэрийн суудал, бариул доргилт шингээнэ.", // TODO native review
+    "technology.story.step03.stat": "Өдрийн турш тав тух", // TODO native review
+    "technology.story.step03.alt": "D-Fuse бариул, залуурын хэсгийн ойрын зураг", // TODO native review
+    "technology.story.step04.category": "Түдгэлзүүлэлтийн хийц", // TODO native review
+    "technology.story.step04.title": "MAESTRO ТҮДГЭЛЗҮҮЛЭЛТ", // TODO native review
+    "technology.story.step04.description": "Хөвөгч холбоос дөрөө савлуулахгүй түдгэлзүүлнэ.", // TODO native review
+    "technology.story.step04.stat": "Дөрөө савлалтгүй", // TODO native review
+    "technology.story.step04.alt": "Maestro цахилгаан дугуйн арын амортизаторын ойрын зураг", // TODO native review
+    "technology.story.step05.category": "Цахилгаан дугуйн систем", // TODO native review
+    "technology.story.step05.title": "SYNCDRIVE PRO МОТОР", // TODO native review
+    "technology.story.step05.description": "Yamaha мотор, Smart Assist автомат дэмжлэг.", // TODO native review
+    "technology.story.step05.stat": "85 Nm мушгих хүч", // TODO native review
+    "technology.story.step05.alt": "SyncDrive Pro моторын ойрын зураг", // TODO native review
+    "technology.story.step06.category": "Хөнгөн цагааны инженерчлэл", // TODO native review
+    "technology.story.step06.title": "ALUXX SL ХӨНГӨН ЦАГААН", // TODO native review
+    "technology.story.step06.description": "Давхар нимгэлсэн 6061 хайлш: хөнгөн, бат бөх.", // TODO native review
+    "technology.story.step06.stat": "6061 хайлш", // TODO native review
+    "technology.story.step06.alt": "Talon-ийн толгойн хоолой, хөнгөн цагаан рамын ойрын зураг", // TODO native review
     "disciplines.eyebrow": "Төрлөөр сонгох",
     "disciplines.title": "Өөрт тохирох дугуйгаа ол",
     "category.ebikes": "Цахилгаан дугуй",
