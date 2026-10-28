@@ -13,7 +13,7 @@ const technologies = [
     title: { en: "ADVANCED SL COMPOSITE", mn: "ADVANCED SL КАРБОН МАТЕРИАЛ" },
     description: {
       en: "Professional-grade raw carbon fiber woven in Giant's own factories for unmatched stiffness-to-weight ratio.",
-      mn: "Giant-ийн өөрийн үйлдвэрт нэхсэн мэргэжлийн түвшний карбон ширхэг нь жингийн бат бэх чанарыг дээд цэгт хүргэнэ.",
+      mn: "Giant-ийн заводод нэхсэн карбон ширхэг нь жин ба бат бэхийн хамгийн сайн харьцааг гаргана.",
     },
     image: "/images/technology-frame.png",
     alt: {
@@ -21,18 +21,18 @@ const technologies = [
       mn: "Giant дугуйн карбон рамыг ойроос харуулсан нь",
     },
     metrics: [
-      { en: "In-house carbon manufacturing", mn: "Өөрийн карбон үйлдвэрлэл" },
-      { en: "High stiffness-to-weight ratio", mn: "Жин ба хөшүүн чанарын оновчтой харьцаа" },
+      { en: "In-house carbon manufacturing", mn: "Заводын карбон хийц" },
+      { en: "High stiffness-to-weight ratio", mn: "Жин ба бат бэхийн сайн харьцаа" },
     ],
   },
   {
     id: "maestro",
     hotspotId: "powercore",
-    category: { en: "SUSPENSION DESIGN", mn: "ТҮДГЭЛЗҮҮЛЭЛТИЙН ХИЙЦ" },
-    title: { en: "MAESTRO SUSPENSION", mn: "MAESTRO ТҮДГЭЛЗҮҮЛЭЛТ" },
+    category: { en: "SUSPENSION DESIGN", mn: "ШИНГЭЭЛТИЙН СИСТЕМИЙН ХИЙЦ" },
+    title: { en: "MAESTRO SUSPENSION", mn: "MAESTRO ШИНГЭЭЛТИЙН СИСТЕМ" },
     description: {
       en: "Floating pivot point system providing active, independent suspension on all mountain terrain without pedal bob.",
-      mn: "Дөрвөн холбоостой түдгэлзүүлэлт нь бартаат замд дөрөөний эрчийг сааруулахгүйгээр цохилтыг бүрэн шингээнэ.",
+      mn: "Maestro систем нь бартаат замд цохилтыг шингээж, дугуйг тогтвортой барина.",
     },
     image: "/images/bike-mtb.png",
     alt: {
@@ -40,8 +40,8 @@ const technologies = [
       mn: "Техникийн бартаат замд зориулсан Giant уулын дугуй",
     },
     metrics: [
-      { en: "Floating pivot point", mn: "Хөвөгч эргэлтийн цэг" },
-      { en: "Active suspension under braking", mn: "Тоормослох үед идэвхтэй түдгэлзүүлэлт" },
+      { en: "Floating pivot point", mn: "Эргэлддэг холбоос" },
+      { en: "Active suspension under braking", mn: "Тоормослох цагт ажилладаг шингээлт" },
     ],
   },
   {
@@ -51,7 +51,7 @@ const technologies = [
     title: { en: "SYNCDRIVE PRO MOTOR", mn: "SYNCDRIVE PRO ЦАХИЛГААН МОТОР" },
     description: {
       en: "Yamaha-powered e-bike motor technology delivering up to 85Nm of torque with Smart Assist automatic support.",
-      mn: "Smart Assist систем бүхий 85Nm мушгих хүчтэй цахилгаан мотор нь дөрөөлөх бүрд мэдрэмжтэй туслах хүчийг өгнө.",
+      mn: "Smart Assist системтэй, 85Nm хүртэл эргэлтийн момент гаргадаг цахилгаан мотор нь аялал бүрт тусална.",
     },
     image: "/images/bike-ebike.png",
     alt: {
@@ -59,7 +59,7 @@ const technologies = [
       mn: "SyncDrive моторт туслах системтэй Giant цахилгаан дугуй",
     },
     metrics: [
-      { en: "Up to 85Nm torque", mn: "85Nm хүртэл мушгих хүч" },
+      { en: "Up to 85Nm torque", mn: "Дээд тал нь 85Nm эргэлтийн момент" },
       { en: "Smart Assist automatic support", mn: "Smart Assist автомат туслах систем" },
     ],
   },
@@ -70,7 +70,7 @@ const technologies = [
     title: { en: "D-FUSE TECHNOLOGY", mn: "D-FUSE ТЕХНОЛОГИ" },
     description: {
       en: "D-shaped composite seatpost and handlebar system absorbing shocks and trail vibrations for maximum compliance and endurance comfort.",
-      mn: "D хэлбэрийн карбон суудал болон залуур нь замын доргилт, чичиргээг өөртөө шингээн холын аялалд тав тухыг өндөр түвшинд хангана.",
+      mn: "D хэлбэрийн карбон суудал болон залуур нь замын доргилт, чичиргээг шингээж, холын аялалд тав тухыг хангана.",
     },
     image: "/images/technology-frame.png",
     alt: {
@@ -89,12 +89,12 @@ const technologies = [
     title: { en: "OVERDRIVE AERO", mn: "OVERDRIVE AERO" },
     description: {
       en: "D-shaped fork steerer tube paired with internal cable routing to provide maximum aerodynamic efficiency and easy serviceability.",
-      mn: "D хэлбэрийн залуурын гол ба далд кабелийн суваг нь салхины эсэргүүцлийг бууруулж, аеродинамик үзүүлэлтийг дээшлүүлнэ.",
+      mn: "D хэлбэрийн залуурын гол ба далд кабелийн суваг нь салхины саадыг багасгаж, аэродинамикийг сайжруулна.",
     },
     image: "/images/bike-road.png",
     alt: {
       en: "Giant road bicycle designed for aerodynamic efficiency",
-      mn: "Аэродинамик үзүүлэлтэд зориулсан Giant замын дугуй",
+      mn: "Аэродинамик хийцтэй Giant замын дугуй",
     },
     metrics: [
       { en: "D-shaped fork steerer", mn: "D хэлбэрийн сэрээний гол" },
@@ -104,16 +104,16 @@ const technologies = [
   {
     id: "aluxx-sl",
     hotspotId: "powercore",
-    category: { en: "ALUMINUM ENGINEERING", mn: "ХӨНГӨН ЦАГААНЫ ИНЖЕНЕРЧЛЭЛ" },
-    title: { en: "ALUXX SL ALUMINUM", mn: "ALUXX SL ХӨНГӨН ЦАГААН ХАЙЛШ" },
+    category: { en: "ALUMINUM ENGINEERING", mn: "АЛЮМИНИЙ ИНЖЕНЕРЧЛЭЛ" },
+    title: { en: "ALUXX SL ALUMINUM", mn: "ALUXX SL АЛЮМИНИЙ ХАЙЛШ" },
     description: {
       en: "High-performance 6061-series alloy tubesets engineered with double-butting for lightweight strength and long-term durability.",
-      mn: "Өндөр чанарын 6061 хайлшаар хийсэн давхар зузаалгатай рам нь хөнгөн жинтэй бөгөөд бат бөх, урт хугацааны эдэлгээг хангана.",
+      mn: "6061 цувралын хайлшаар хийсэн давхар зузаалгатай рам нь жин багатай, бат бэх, удаан эдэлгээтэй.",
     },
     image: "/images/bike-gravel.png",
     alt: {
       en: "Giant aluminum gravel bicycle frame",
-      mn: "Giant хөнгөн цагаан гравел дугуйн рам",
+      mn: "Giant алюминий гравел дугуйн рам",
     },
     metrics: [
       { en: "6061-series alloy", mn: "6061 цувралын хайлш" },
@@ -140,7 +140,7 @@ const hotspots = [
     technologyIds: ["advanced-sl"],
     detail: {
       en: "Raw carbon fiber weaving & max stiffness-to-weight ratio",
-      mn: "Түүхий карбон нэхээс ба жин-хөшүүн чанарын дээд харьцаа",
+      mn: "Карбон нэхээс ба жин, бат бэхийн дээд харьцаа",
     },
   },
   {
@@ -150,7 +150,7 @@ const hotspots = [
     technologyIds: ["maestro", "syncdrive", "aluxx-sl"],
     detail: {
       en: "Oversized bottom bracket stiffness & power transfer",
-      mn: "Томруулсан каретканы хөшүүн чанар ба хүч дамжуулалт",
+      mn: "Томруулсан каретка ба бат бэх хийц",
     },
   },
 ] as const;
@@ -252,7 +252,7 @@ export default function TechnologySection({ pageTitle = false }: { pageTitle?: b
           </Heading>
           <p>
             {language === "mn"
-              ? "Карбон нэхэхээс эхлээд ухаалаг цахилгаан моторын туслах систем хүртэл Giant дугуйн цаадах инженерчлэлтэй танилцаарай."
+              ? "Карбон нэхэхээс эхлээд ухаалаг цахилгаан моторын туслах систем болтол Giant дугуйн инженерчлэлтэй танилцаарай."
               : "Discover the proprietary engineering behind Giant bicycles—from raw carbon weaving to intelligent e-bike motor assistance."}
           </p>
         </motion.header>

@@ -6,14 +6,14 @@ import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
 import { bikeCategories, bikesData, type BikeCategory } from "@/data/bikesData";
-import { formatMnt, formatUsdFromMnt } from "@/data/products";
+import { formatMnt, formatUsdFromMnt, products } from "@/data/products";
 
 type BikeCatalogProps = {
   initialCategory: BikeCategory | "all";
 };
 
 export default function BikeCatalog({ initialCategory }: BikeCatalogProps) {
-  const { language } = useLanguage();
+  const { language, translate } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<BikeCategory | "all">(initialCategory);
   const filteredBikes =
     activeCategory === "all"
@@ -24,7 +24,7 @@ export default function BikeCatalog({ initialCategory }: BikeCatalogProps) {
     <>
       <nav
         aria-label={language === "mn" ? "Дугуйн ангилал" : "Bike categories"}
-        className="bike-category-nav sticky z-20 border-y border-neutral-200 bg-white/95 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/95"
+        className="bike-category-nav sticky z-20 border-y border-neutral-200 bg-white/95 backdrop-blur dark:border-neutral-800 dark:bg-[#0b0f17]/95"
         style={{ top: "var(--header-height)" }}
       >
         <div className="wrap flex gap-2 overflow-x-auto py-3">
@@ -59,7 +59,7 @@ export default function BikeCatalog({ initialCategory }: BikeCatalogProps) {
                 <article className="group flex h-full flex-col overflow-hidden rounded-sm border border-neutral-200 bg-white p-4 shadow-sm transition-colors hover:border-[#000099] dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-[#000099]">
                   <Link
                     href={`/bikes/${bike.slug}`}
-                    className="relative mb-4 block aspect-[11/8] overflow-hidden rounded-sm bg-[#F2F4F7] p-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#000099] dark:bg-neutral-800"
+                    className="relative mb-4 block aspect-[11/8] overflow-hidden rounded-sm bg-white p-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#000099] dark:bg-neutral-900"
                     aria-label={`${language === "mn" ? "Дугуй үзэх" : "View"}: ${bike.name}`}
                   >
                     <Image
@@ -96,6 +96,17 @@ export default function BikeCatalog({ initialCategory }: BikeCatalogProps) {
                   <h2 className="text-base font-black uppercase leading-snug text-neutral-900 dark:text-white">
                     {bike.name}
                   </h2>
+                  {(() => {
+                    const product = products.find((item) => item.slug === bike.slug);
+                    if (!product) return null;
+                    return (
+                      <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+                        {language === "mn" && product.descriptionMn
+                          ? product.descriptionMn
+                          : translate(product.description)}
+                      </p>
+                    );
+                  })()}
                   <p className="mt-2 text-lg font-extrabold tabular-nums text-neutral-900 dark:text-white">
                     {language === "mn"
                       ? formatMnt(bike.priceMnt)

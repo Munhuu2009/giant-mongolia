@@ -58,22 +58,22 @@ function bike(
 }
 
 export const bikesData: BikeCatalogItem[] = [
-  bike("propel-advanced-sl-0", "Giant Propel Advanced SL 0", "road", "Aero Road", "Замын / Аэродинамик", 38_000_000, ["S", "M", "L"], "new"),
-  bike("propel-advanced-1", "Giant Propel Advanced 1", "road", "Aero Road", "Замын / Аэродинамик", 9_850_000, ["S", "M", "ML", "L"]),
-  bike("tcr-advanced-sl-0", "Giant TCR Advanced SL 0", "road", "Road Race", "Замын / Уралдааны", 32_000_000, ["XS", "S", "M", "L"], "new"),
-  bike("tcr-advanced-2", "Giant TCR Advanced 2", "road", "Road Race", "Замын / Уралдааны", 7_250_000, ["XS", "S", "M", "ML", "L"]),
-  bike("defy-advanced-pro-1", "Giant Defy Advanced Pro 1", "road", "Endurance Road", "Замын / Холын зайн", 14_500_000, ["S", "M", "ML", "L"]),
-  bike("contend-ar-1", "Giant Contend AR 1", "road", "All-Road", "Замын / Бүх замын", 4_800_000, ["S", "M", "L", "XL"]),
+  bike("propel-advanced-sl-0", "Giant Propel Advanced SL 0", "road", "Aero Road", "Замын / Аэродинамик", 38_000_000, ["S", "M", "L"], "new", { image: "/images/propelsl0.jpg" }),
+  bike("propel-advanced-1", "Giant Propel Advanced 1", "road", "Aero Road", "Замын / Аэродинамик", 9_850_000, ["S", "M", "ML", "L"], undefined, { image: "/images/giantpropeladvanced1.webp" }),
+  bike("tcr-advanced-sl-0", "Giant TCR Advanced SL 0", "road", "Road Race", "Замын / Уралдааны", 32_000_000, ["XS", "S", "M", "L"], "new", { image: "/images/tcradvanced0.jpg" }),
+  bike("tcr-advanced-2", "Giant TCR Advanced 2", "road", "Road Race", "Замын / Уралдааны", 7_250_000, ["XS", "S", "M", "ML", "L"], undefined, { image: "/images/tcradvanced2.jpg" }),
+  bike("defy-advanced-pro-1", "Giant Defy Advanced Pro 1", "road", "Endurance Road", "Замын / Холын зайн", 14_500_000, ["S", "M", "ML", "L"], undefined, { image: "/images/defyadvancedpro.jpg" }),
+  bike("contend-ar-1", "Giant Contend AR 1", "road", "All-Road", "Замын / Бүх замын", 4_800_000, ["S", "M", "L", "XL"], undefined, { image: "/images/contendar1.jpg" }),
 
-  bike("revolt-advanced-pro-0", "Giant Revolt Advanced Pro 0", "gravel", "Gravel", "Гравел", 18_500_000, ["S", "M", "ML", "L"], "new"),
-  bike("revolt-advanced-2", "Giant Revolt Advanced 2", "gravel", "Gravel", "Гравел", 8_900_000, ["XS", "S", "M", "L"]),
-  bike("revolt-2", "Giant Revolt 2", "gravel", "Gravel / Adventure", "Гравел / Адал явдал", 4_950_000, ["XS", "S", "M", "ML", "L"]),
-  bike("revolt-x-advanced-pro-1", "Giant Revolt X Advanced Pro 1", "gravel", "Suspension Gravel", "Түдгэлзүүлэлттэй гравел", 16_200_000, ["S", "M", "L"]),
-  bike("toughroad-slr-1", "Giant ToughRoad SLR 1", "gravel", "Adventure / Off-Road", "Адал явдал / Бартаат зам", 5_200_000, ["S", "M", "L", "XL"]),
+  bike("revolt-advanced-pro-0", "Giant Revolt Advanced Pro 0", "gravel", "Gravel", "Гравел", 18_500_000, ["S", "M", "ML", "L"], "new", { image: "/images/revoltadpro0.jpg" }),
+  bike("revolt-advanced-2", "Giant Revolt Advanced 2", "gravel", "Gravel", "Гравел", 8_900_000, ["XS", "S", "M", "L"], undefined, { image: "/images/giantrevolt2advanced.webp" }),
+  bike("revolt-2", "Giant Revolt 2", "gravel", "Gravel / Adventure", "Гравел / Адал явдал", 4_950_000, ["XS", "S", "M", "ML", "L"], undefined, { image: "/images/giantrevolt2advanced.webp" }),
+  bike("revolt-x-advanced-pro-1", "Giant Revolt X Advanced Pro 1", "gravel", "Suspension Gravel", "Түдгэлзүүлэлттэй гравел", 16_200_000, ["S", "M", "L"], undefined, { image: "/images/revoltxadvpro1.jpg" }),
+  bike("toughroad-slr-1", "Giant ToughRoad SLR 1", "gravel", "Adventure / Off-Road", "Адал явдал / Бартаат зам", 5_200_000, ["S", "M", "L", "XL"], undefined, { image: "/images/toughroadslr1.jpg" }),
 
-  bike("anthem-advanced-pro-29-1", "Giant Anthem Advanced Pro 29 1", "mountain", "XC Full Suspension", "Кросс кантри / Бүтэн түдгэлзүүлэлт", 21_000_000, ["S", "M", "L"]),
+  bike("anthem-advanced-pro-29-1", "Giant Anthem Advanced Pro 29 1", "mountain", "XC Full Suspension", "Кросс кантри / Бүтэн түдгэлзүүлэлт", 21_000_000, ["S", "M", "L"], undefined, { image: "/images/anthemadv.jpg" }),
   bike("trance-advanced-pro-29-2", "Giant Trance Advanced Pro 29 2", "mountain", "Trail Full Suspension", "Трейл / Бүтэн түдгэлзүүлэлт", 15_800_000, ["S", "M", "L", "XL"]),
-  bike("trance-x-2", "Giant Trance X 2", "mountain", "Trail", "Трейл", 7_400_000, ["S", "M", "L", "XL"]),
+  bike("trance-x-2", "Giant Trance X 2", "mountain", "Trail", "Трейл", 7_400_000, ["S", "M", "L", "XL"], undefined, { image: "/images/gianttrancex2.jpg" }),
   bike("reign-advanced-pro-29-1", "Giant Reign Advanced Pro 29 1", "mountain", "Enduro", "Эндуро", 22_500_000, ["S", "M", "L"]),
   bike("stance-29-2", "Giant Stance 29 2", "mountain", "Trail Full Suspension", "Трейл / Бүтэн түдгэлзүүлэлт", 5_800_000, ["S", "M", "L", "XL"]),
   bike("fathom-2", "Giant Fathom 2", "mountain", "XC Hardtail", "Кросс кантри / Хатуу сэрээ", 3_850_000, ["S", "M", "L", "XL"]),
@@ -88,9 +88,9 @@ export const bikesData: BikeCatalogItem[] = [
     "best-seller",
     {
       priceUsd: 1249,
-      image: "/images/giantvid15.jpg",
+      image: "/images/giantbike1.png",
       galleryImages: [
-        "/images/giantvid15.jpg",
+        "/images/giantbike1.png",
         "/images/giantvid10.jpg",
         "/images/giantvid11.jpg",
         "/images/giantvid12.jpg",
@@ -106,7 +106,7 @@ export const bikesData: BikeCatalogItem[] = [
 
   bike("reign-advanced-e-plus-0", "Giant Reign Advanced E+ 0", "ebike", "E-MTB", "Цахилгаан уулын дугуй", 31_500_000, ["S", "M", "L"], "ebike"),
   bike("trance-advanced-e-plus-1", "Giant Trance Advanced E+ 1", "ebike", "E-MTB", "Цахилгаан уулын дугуй", 24_500_000, ["S", "M", "L", "XL"], "ebike"),
-  bike("stance-e-plus-1", "Giant Stance E+ 1", "ebike", "Trail E-MTB", "Трейл цахилгаан уулын дугуй", 11_200_000, ["S", "M", "L"], "ebike"),
+  bike("stance-e-plus-1", "Giant Stance E+ 1", "ebike", "Trail E-MTB", "Трейл цахилгаан уулын дугуй", 11_200_000, ["S", "M", "L"], "ebike", { image: "/images/giantstancee+1.png" }),
   bike("explore-e-plus-2", "Giant Explore E+ 2", "ebike", "Trekking E-Bike", "Аяллын цахилгаан дугуй", 9_500_000, ["S", "M", "L", "XL"], "ebike"),
   bike("fastroad-e-plus-ex-pro", "Giant FastRoad E+ EX Pro", "ebike", "Fitness E-Bike", "Фитнес цахилгаан дугуй", 10_800_000, ["S", "M", "L"], "ebike"),
 

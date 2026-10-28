@@ -36,11 +36,11 @@ export default function GearVideoHero() {
           id="gear-heading"
           className="mb-3 text-4xl font-black uppercase italic leading-none tracking-wider text-white drop-shadow-md sm:text-6xl lg:text-7xl"
         >
-          {language === "mn" ? "GIANT ГҮЙЦЭТГЭЛИЙН ХЭРЭГСЭЛ" : "GEAR UP FOR EVERY RIDE"}
+          {language === "mn" ? "ИЖ БҮРЭН ДУГУЙН ХЭРЭГСЭЛ" : "GEAR UP FOR EVERY RIDE"}
         </h1>
         <p className="max-w-xl text-xs font-semibold italic uppercase leading-relaxed tracking-widest text-neutral-300 sm:text-sm">
           {language === "mn"
-            ? "Унаа бүрд зориулсан Giant дуулга, хувцас, гутал болон дагалдах хэрэгслээр бэлтгэлээ базаагаарай."
+            ? "Өдөр бүрийн хэрэглээнд зориулсан Giant дуулга, хувцас, гутал болон дагалдах хэрэгслээр бэлтгэлээ базаагаарай."
             : "Engineered for comfort, protection, and performance on every ride."}
         </p>
       </div>

@@ -53,7 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="min-h-screen flex flex-col overflow-x-clip">
+      <body className="min-h-screen flex flex-col overflow-x-clip dark:bg-[#0b0f17]">
         <LanguageProvider>
           <CartProvider>
             <SiteHeader />

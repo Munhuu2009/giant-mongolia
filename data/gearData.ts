@@ -2,6 +2,7 @@ export type GearCategory = "helmets" | "apparel" | "electronics" | "accessories"
 
 export type GearProduct = {
   id: string;
+  slug: string;
   name: string;
   category: GearCategory;
   priceMnt: number;
@@ -24,14 +25,14 @@ export const gearCategories: {
   { id: "accessories", en: "Bags, Pumps & Tools", mn: "ЦӨНХ & БАГАЖ" },
 ];
 
-export const gearProducts: GearProduct[] = [
+const rawGearProducts: Omit<GearProduct, "slug">[] = [
   {
     id: "rev-pro-mips-helmet",
     name: "Giant Rev Pro MIPS Helmet",
     category: "helmets",
     priceMnt: 580_000,
     priceUsd: 165,
-    image: "https://images.unsplash.com/photo-1591511275477-88f079d88154?auto=format&fit=crop&w=800&q=85",
+    image: "/images/gianthelmet1.jpg",
     badge: "MIPS",
     detail: {
       en: "Race-ready protection with MIPS rotational impact technology.",
@@ -44,7 +45,7 @@ export const gearProducts: GearProduct[] = [
     category: "helmets",
     priceMnt: 280_000,
     priceUsd: 80,
-    image: "https://images.unsplash.com/photo-1601971360277-7b4c8aa60894?auto=format&fit=crop&w=800&q=85",
+    image: "/images/gianthelmet2.jpg",
     badge: "MIPS",
     detail: {
       en: "Trail-focused coverage and comfortable MIPS protection.",
@@ -57,7 +58,7 @@ export const gearProducts: GearProduct[] = [
     category: "apparel",
     priceMnt: 380_000,
     priceUsd: 110,
-    image: "https://images.unsplash.com/photo-1676372763678-e23205476250?auto=format&fit=crop&w=800&q=85",
+    image: "/images/giantjacket1.jpg",
     badge: "WATERPROOF",
     detail: {
       en: "Lightweight weather protection for wet rides and changing conditions.",
@@ -70,7 +71,7 @@ export const gearProducts: GearProduct[] = [
     category: "apparel",
     priceMnt: 1_050_000,
     priceUsd: 299.99,
-    image: "https://images.unsplash.com/photo-1739945634786-cb33a6884c73?auto=format&fit=crop&w=800&q=85",
+    image: "/images/giantshoe1.png",
     badge: "NEW",
     isNew: true,
     detail: {
@@ -84,7 +85,7 @@ export const gearProducts: GearProduct[] = [
     category: "apparel",
     priceMnt: 420_000,
     priceUsd: 120,
-    image: "https://images.unsplash.com/photo-1631276893368-554b60393efb?auto=format&fit=crop&w=800&q=85",
+    image: "/images/bibshorts.jpg",
     badge: "SET",
     detail: {
       en: "A coordinated riding kit made for comfort on long days in the saddle.",
@@ -97,7 +98,7 @@ export const gearProducts: GearProduct[] = [
     category: "electronics",
     priceMnt: 320_000,
     priceUsd: 90,
-    image: "https://images.unsplash.com/photo-1579118690145-7753994c2d56?auto=format&fit=crop&w=800&q=85",
+    image: "/images/frontlight.jpg",
     badge: "BEST SELLER",
     detail: {
       en: "A powerful 1100-lumen front light for visibility after dark.",
@@ -110,7 +111,7 @@ export const gearProducts: GearProduct[] = [
     category: "electronics",
     priceMnt: 180_000,
     priceUsd: 50,
-    image: "https://images.unsplash.com/photo-1585159806683-4b61b790fe79?auto=format&fit=crop&w=800&q=85",
+    image: "/images/rearlight.jpg",
     detail: {
       en: "A compact rear light to help keep you visible on every ride.",
       mn: "Аялал бүрд харагдах байдлыг нэмэх авсаархан арын гэрэл.",
@@ -122,7 +123,7 @@ export const gearProducts: GearProduct[] = [
     category: "accessories",
     priceMnt: 210_000,
     priceUsd: 60,
-    image: "https://images.unsplash.com/photo-1669024537138-65d05ede8aae?auto=format&fit=crop&w=800&q=85",
+    image: "/images/pump.jpg",
     badge: "WORKSHOP PICK",
     detail: {
       en: "A stable floor pump for reliable, precise everyday inflation.",
@@ -135,10 +136,29 @@ export const gearProducts: GearProduct[] = [
     category: "accessories",
     priceMnt: 110_000,
     priceUsd: 30,
-    image: "https://images.unsplash.com/photo-1707211748502-e10006030f13?auto=format&fit=crop&w=800&q=85",
+    image: "/images/seatbag.jpg",
     detail: {
       en: "A practical storage and hydration set for rides near and far.",
       mn: "Ойрын болон холын аялалд хэрэгтэй цүнх, савны суурийн багц.",
     },
   },
 ];
+
+export const gearProducts: GearProduct[] = rawGearProducts.map((product) => ({
+  ...product,
+  slug: product.id,
+}));
+
+export function getGearBySlug(slug: string): GearProduct | undefined {
+  return gearProducts.find((product) => product.slug === slug);
+}
+
+export function getGearSizes(product: GearProduct): string[] {
+  if (product.category === "helmets") return ["S", "M", "L"];
+  if (product.id.includes("shoes")) return ["40", "41", "42", "43", "44", "45"];
+  if (product.category === "apparel") return ["S", "M", "L", "XL"];
+  return [];
+}
+
+export const gearDescriptionMn =
+  "Giant брэндийн энэ мэргэжлийн хэрэгсэл нь чанар болон тав тухыг дээд зэргээр хангана. Бэлэн байдлыг Giant Mongolia-с шалгана уу.";

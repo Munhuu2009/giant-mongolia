@@ -33,13 +33,15 @@ const galleryImages = [
 
 type FlagshipStoreProps = {
   showGallery?: boolean;
+  showBanner?: boolean;
 };
 
-export default function FlagshipStore({ showGallery = false }: FlagshipStoreProps) {
+export default function FlagshipStore({ showGallery = false, showBanner = true }: FlagshipStoreProps) {
   const { t, language } = useLanguage();
 
   return (
     <>
+      {showBanner && (
       <motion.section
         id="stores"
         aria-labelledby="stores-heading"
@@ -50,23 +52,34 @@ export default function FlagshipStore({ showGallery = false }: FlagshipStoreProp
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         <Image
-          src="/images/giant2.webp"
+          src="/images/upscalemedia-transformed.webp"
           alt=""
           fill
           sizes="100vw"
-          className="object-cover"
+          quality={90}
+          className="h-full w-full object-cover"
         />
-        <div aria-hidden="true" className="photo-panel__scrim" />
+        <div
+          aria-hidden="true"
+          className="photo-panel__scrim bg-gradient-to-t from-black/80 via-black/40 to-black/20"
+        />
 
         <div className="wrap photo-panel__body">
-          <p className="chip chip-glass mb-4">{t("store.eyebrow")}</p>
+          <p className="chip chip-glass mb-4 bg-white/15 border-white/30 backdrop-blur-[1px]">{t("store.eyebrow")}</p>
           <h2 id="stores-heading" className="type-headline">
             {t("store.title")}
           </h2>
           <p className="type-lead mt-5">{t("store.description")}</p>
 
           <dl className="info-grid">
-            <div className="glass-card flagship-store-card">
+            <motion.div
+              className="glass-card flagship-store-card backdrop-blur-sm bg-white/[0.08] dark:bg-black/40 border border-white/25 dark:border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.35)] rounded-2xl"
+              whileHover={{
+                borderColor: "rgba(255, 255, 255, 0.4)",
+                boxShadow: "0 0 20px rgba(255, 255, 255, 0.1)",
+              }}
+              transition={{ duration: 0.3 }}
+            >
               <dt>
                 <span className="flagship-store-card__icon">
                   <MapPin className="h-4 w-4" aria-hidden="true" />
@@ -78,8 +91,15 @@ export default function FlagshipStore({ showGallery = false }: FlagshipStoreProp
                   {store.address.join(" ")}
                 </a>
               </dd>
-            </div>
-            <div className="glass-card flagship-store-card">
+            </motion.div>
+            <motion.div
+              className="glass-card flagship-store-card backdrop-blur-sm bg-white/[0.08] dark:bg-black/40 border border-white/25 dark:border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.35)] rounded-2xl"
+              whileHover={{
+                borderColor: "rgba(255, 255, 255, 0.4)",
+                boxShadow: "0 0 20px rgba(255, 255, 255, 0.1)",
+              }}
+              transition={{ duration: 0.3 }}
+            >
               <dt>
                 <span className="flagship-store-card__icon">
                   <Clock className="h-4 w-4" aria-hidden="true" />
@@ -87,8 +107,15 @@ export default function FlagshipStore({ showGallery = false }: FlagshipStoreProp
                 {t("store.hours")}
               </dt>
               <dd>{t("store.dailyHours")}</dd>
-            </div>
-            <div className="glass-card flagship-store-card">
+            </motion.div>
+            <motion.div
+              className="glass-card flagship-store-card backdrop-blur-sm bg-white/[0.08] dark:bg-black/40 border border-white/25 dark:border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.35)] rounded-2xl"
+              whileHover={{
+                borderColor: "rgba(255, 255, 255, 0.4)",
+                boxShadow: "0 0 20px rgba(255, 255, 255, 0.1)",
+              }}
+              transition={{ duration: 0.3 }}
+            >
               <dt>
                 <span className="flagship-store-card__icon">
                   <Phone className="h-4 w-4" aria-hidden="true" />
@@ -98,24 +125,40 @@ export default function FlagshipStore({ showGallery = false }: FlagshipStoreProp
               <dd>
                 <a href="tel:+97677716868">{store.phone}</a>
               </dd>
-            </div>
+            </motion.div>
           </dl>
 
-          <motion.div className="mt-10" whileTap={{ scale: 0.98 }} transition={{ duration: 0.2 }}>
-            <ButtonLink
-              href={store.directionsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="glass-strong"
-              size="lg"
-              className="flagship-store-cta"
-            >
-              {t("store.directions")}
-              <ArrowRight className="arrow h-5 w-5" aria-hidden="true" />
-            </ButtonLink>
+          <motion.div
+            className="mt-10"
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+          >
+            <motion.div whileHover="hover">
+              <ButtonLink
+                href={store.directionsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="glass-strong"
+                size="lg"
+                className="flagship-store-cta inline-flex items-center gap-2 bg-white/15 dark:bg-white/10 border-white/30 dark:border-white/20 backdrop-blur-[1px] shadow-sm hover:bg-white/25 hover:border-white/40"
+              >
+                {t("store.directions")}
+                <motion.span
+                  className="arrow inline-block h-5 w-5"
+                  aria-hidden="true"
+                  variants={{
+                    hover: { x: 4 },
+                  }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <ArrowRight className="h-5 w-5" />
+                </motion.span>
+              </ButtonLink>
+            </motion.div>
           </motion.div>
         </div>
       </motion.section>
+      )}
 
       {showGallery && (
         <section aria-labelledby="store-gallery-heading" className="store-gallery">

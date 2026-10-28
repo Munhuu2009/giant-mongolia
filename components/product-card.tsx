@@ -3,8 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { ArrowRight, Heart } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
 import { ButtonLink } from "@/components/ui/Button";
 import { formatMnt, type Product } from "@/data/products";
@@ -21,18 +20,14 @@ export default function ProductCard({
   promotionBadge,
 }: ProductCardProps) {
   const { language, translate } = useLanguage();
-  const [saved, setSaved] = useState(false);
   const isFeatured = variant === "featured";
-  const saveLabel = saved
-    ? `Remove ${product.name} from wishlist`
-    : `Save ${product.name} to wishlist`;
 
   return (
     <article
       className={`product-card${isFeatured ? " product-card--featured group border border-neutral-200 bg-white p-5 shadow-sm transition-all hover:border-[#000099] dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-[#000099]" : ""}`}
     >
       <div
-        className={`product-card__media on-photo${isFeatured ? " rounded-sm bg-[#F2F4F7] p-4 dark:bg-neutral-800/80" : ""}`}
+        className={`product-card__media on-photo${isFeatured ? " rounded-sm bg-white p-4" : ""}`}
       >
         {isFeatured ? (
           <div className="absolute inset-4">
@@ -74,15 +69,6 @@ export default function ProductCard({
           : product.badge && (
               <span className="chip chip-accent product-card__badge">{translate(product.badge)}</span>
             )}
-        <button
-          type="button"
-          onClick={() => setSaved((v) => !v)}
-          aria-pressed={saved}
-          aria-label={translate(saveLabel)}
-          className={`icon-btn icon-btn-glass product-card__save${saved ? " is-saved" : ""}`}
-        >
-          <Heart className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
-        </button>
       </div>
 
       <div className="product-card__body">

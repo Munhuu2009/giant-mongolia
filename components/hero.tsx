@@ -1,9 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/components/language-provider";
-import { ButtonLink } from "@/components/ui/Button";
 
 const features = [
   {
@@ -20,8 +20,33 @@ const features = [
   },
 ] as const;
 
+const heroSlides = [
+  { src: "/images/hero/giantbike2.png" },
+  { src: "/images/hero/giantbike5.png" },
+] as const;
+
+const SLIDE_INTERVAL_MS = 6500;
+const SLIDE_TRANSITION = { duration: 1.2, ease: "easeInOut" } as const;
+
+const textFade = {
+  initial: { opacity: 0, y: 15 },
+  animate: { opacity: 1, y: 0 },
+  transition: SLIDE_TRANSITION,
+};
+
 export default function Hero() {
   const { t } = useLanguage();
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((current) => (current + 1) % heroSlides.length);
+    }, SLIDE_INTERVAL_MS);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const activeSlide = heroSlides[activeIndex];
 
   return (
     <motion.section
@@ -32,36 +57,43 @@ export default function Hero() {
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     >
-        <div className="hero__product-stage" aria-hidden="true">
-        <div className="hero__product-frame">
-          <Image
-            src="/images/hero/giantbike2.png"
-            alt=""
-            aria-hidden={true}
-            fill={true}
-            priority={true}
-            sizes="100vw"
-            className="hero__product-image hero__product-image--a"
-            onError={() => console.warn("[Hero] Image failed to load: /images/hero/giantbike2.png")}
-          />
-          <Image
-            src="/images/hero/giantbike5.png"
-            alt=""
-            aria-hidden={true}
-            fill={true}
-            loading="lazy"
-            fetchPriority="low"
-            sizes="100vw"
-            className="hero__product-image hero__product-image--b"
-            onError={() => console.warn("[Hero] Image failed to load: /images/hero/giantbike5.png")}
-          />
+      <div className="hero__product-stage" aria-hidden="true">
+        <div className="hero__product-frame relative overflow-hidden">
+          <AnimatePresence initial={false} mode="popLayout">
+            <motion.div
+              key={activeSlide.src}
+              className="absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={SLIDE_TRANSITION}
+            >
+              <Image
+                src={activeSlide.src}
+                alt=""
+                aria-hidden={true}
+                fill={true}
+                priority={true}
+                sizes="100vw"
+                className="hero__product-image"
+                onError={() => console.warn(`[Hero] Image failed to load: ${activeSlide.src}`)}
+              />
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
       <div aria-hidden="true" className="hero__showcase-scrim" />
 
       <div className="hero__showcase-inner">
-        <p className="hero__showcase-eyebrow">{t("hero.category")}</p>
-        <h1 id="hero-heading" className="hero__showcase-title">
+        <motion.p key={`eyebrow-${activeIndex}`} className="hero__showcase-eyebrow" {...textFade}>
+          {t("hero.category")}
+        </motion.p>
+        <motion.h1
+          key={`title-${activeIndex}`}
+          id="hero-heading"
+          className="hero__showcase-title"
+          {...textFade}
+        >
           <span className="hero__headline-side">
             <span className="hero__headline-line">{t("hero.headline.left1")}</span>
             <span className="hero__headline-line">{t("hero.headline.left2")}</span>
@@ -76,16 +108,7 @@ export default function Hero() {
               {t("hero.headline.right3")}
             </span>
           </span>
-        </h1>
-        <motion.div
-          className="hero__showcase-action"
-          whileTap={{ scale: 0.98 }}
-          transition={{ duration: 0.2 }}
-        >
-          <ButtonLink href="/bikes" variant="primary" size="lg" className="hero__showcase-cta">
-            {t("hero.cta")}
-          </ButtonLink>
-        </motion.div>
+        </motion.h1>
 
         <ul className="hero__features">
           {features.map(({ title, description }) => (

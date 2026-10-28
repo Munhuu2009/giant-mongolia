@@ -37,7 +37,7 @@ export default function SiteFooter() {
   const { t } = useLanguage();
 
   return (
-    <footer className="site-footer bg-neutral-100 text-neutral-900 transition-colors duration-300 dark:bg-neutral-950 dark:text-white">
+    <footer className="site-footer bg-neutral-100 text-neutral-900 transition-colors duration-300 dark:bg-[#0b0f17] dark:text-white">
       <div className="wrap">
         <div className="footer-top">
           <div>

@@ -157,21 +157,21 @@ const mnMessages: Record<keyof typeof enMessages, string> = {
     "nav.forCity": "Хотын амьдралд",
     "nav.forFit": "Төгс тохиргоонд",
     "hero.category": "Унадаг дугуй / Гравел",
-    "hero.headline.left1": "ХЯЗГААРАА",
-    "hero.headline.left2": "ДАВЖ",
-    "hero.headline.left3": "УНА",
+    "hero.headline.left1": "ХУРДАН",
+    "hero.headline.left2": "БОЛОН",
+    "hero.headline.left3": "БАТ БЭХ",
     "hero.headline.right1": "GIANT",
     "hero.headline.right2": "ТАНТАЙ",
     "hero.headline.right3": "ХАМТ",
     "hero.description": "Нарийвчлал, хурд, замын барьцад зориулан бүтээгдсэн дугуйгаар Монголыг нээгээрэй.",
     "hero.cta": "Дугуй үзэх",
-    "hero.feature.design.title": "Шинэлэг дизайн",
+    "hero.feature.design.title": "Шинэлэг загвар",
     "hero.feature.design.description":
       "Зорилготой хийц, унаачдад зориулсан нарийн шийдэл нь итгэлтэй, хөнгөн мэдрэмж төрүүлнэ.",
     "hero.feature.engineering.title": "Нарийн инженерчлэл",
     "hero.feature.engineering.description":
       "Рам болон эд анги бүрийг удирдлага, бат бөх чанар, шуурхай мэдрэмжид зориулан тохируулдаг.",
-    "hero.feature.performance.title": "Тогтвортой гүйцэтгэл",
+    "hero.feature.performance.title": "Тогтвортой байдал",
     "hero.feature.performance.description":
       "Нарийн сонгосон материал, удаан эдэлгээтэй хийц нь аялал бүрийг илүү үнэ цэнтэй болгоно.",
     "technology.story.eyebrow": "Giant-ийн инженерчлэл", // TODO native review

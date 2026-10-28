@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import FlagshipStore from "@/components/flagship-store";
-import PageIntro from "@/components/page-intro";
-import { storesPage } from "@/data/pages";
+import StoreContact from "@/components/store-contact";
 
 export const metadata: Metadata = {
   title: "Stores",
@@ -12,13 +11,8 @@ export const metadata: Metadata = {
 export default function StoresPage() {
   return (
     <main>
-      <PageIntro
-        id="stores-page-heading"
-        eyebrow={storesPage.eyebrow}
-        title={storesPage.title}
-        lead={storesPage.lead}
-      />
-      <FlagshipStore showGallery />
+      <StoreContact />
+      <FlagshipStore showGallery showBanner={false} />
     </main>
   );
 }

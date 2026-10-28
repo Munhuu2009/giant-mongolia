@@ -17,6 +17,7 @@ const gridVariants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.1 } },
 };
+
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -33,7 +34,7 @@ export default function FeaturedBikes() {
     <motion.section
       id="bikes"
       aria-labelledby="bikes-heading"
-      className="panel featured-section bg-[#F8F9FA] text-neutral-900 transition-colors duration-300 dark:bg-neutral-950 dark:text-white"
+      className="panel featured-section bg-[#F8F9FA] text-neutral-900 transition-colors duration-300 dark:bg-[#0b0f17] dark:text-white py-20"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
@@ -44,7 +45,7 @@ export default function FeaturedBikes() {
           id="bikes-heading"
           eyebrow={translate("2026 collection")}
           title={translate("Featured bikes")}
-          titleClassName="font-black uppercase tracking-tight text-neutral-900 dark:text-white"
+          titleClassName="font-extrabold italic tracking-tight uppercase transform -skew-x-3 text-neutral-900 dark:text-white text-4xl md:text-5xl"
           action={
             <motion.div whileTap={{ scale: 0.98 }} transition={{ duration: 0.2 }}>
               <ButtonLink
@@ -61,7 +62,7 @@ export default function FeaturedBikes() {
         />
 
         <motion.ul
-          className="product-grid"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12 bg-transparent border-0 shadow-none"
           variants={gridVariants}
           initial="hidden"
           whileInView="visible"
@@ -71,8 +72,9 @@ export default function FeaturedBikes() {
             <motion.li
               key={product.id}
               variants={cardVariants}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
+              whileHover={{ y: -6 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="bg-transparent border-0 shadow-none p-0"
             >
               <ProductCard
                 product={product}

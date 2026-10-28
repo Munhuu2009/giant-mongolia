@@ -23,8 +23,18 @@ export type Product = {
   href: string;
   badge?: string;
   description: string;
+  descriptionMn?: string;
   specs: ProductSpec[];
   discipline: string;
+};
+
+const descriptionsMn: Partial<Record<string, string>> = {
+  road: "Giant брэндийн замын дугуй нь тав тух, хурд ба бат бэх чанарыг сайн хослуулсан. Бэлэн загвар болон хэмжээний мэдээллийг Giant Mongolia-с авна уу.",
+  gravel: "Бартаат болон засмал замд тохирсон бат бэх хийцтэй, холын аялалд нэн тохиромжтой загвар. Нэмэлт мэдээллийг Giant Mongolia-с авна уу.",
+  mountain: "Хатуу бартаа, уулын замд сайн ажиллагаатай, бат бэх рамтай дугуй.",
+  ebike: "Giant брэндийн цахилгаан дугуй нь урт аялал, өгсүүр замд тусламж үзүүлнэ. Бэлэн байдал болон хэмжээний мэдээллийг Giant Mongolia-с авна уу.",
+  city: "Өдөр тутмын аялал, фитнесэд тохирсон тав тухтай хотын дугуй. Бэлэн байдал болон хэмжээний мэдээллийг Giant Mongolia-с авна уу.",
+  kids: "Багачуудын анхны аялалд зориулсан бат бэх, жолоодоход хялбар дугуй. Хэмжээний мэдээллийг Giant Mongolia-с авна уу.",
 };
 
 const originalProducts: Product[] = [
@@ -231,6 +241,7 @@ export const products: Product[] = bikesData.map((bike) => {
       original?.description ??
       `${bike.name} is a Giant ${bike.category.toLowerCase()} bicycle, designed for its intended riding discipline. Contact Giant Mongolia for current availability and fit guidance.`,
     specs: original?.specs ?? [{ label: "Discipline", value: bike.category }],
+    descriptionMn: original ? undefined : descriptionsMn[bike.categoryId],
     discipline: bike.categoryId,
   };
 });

@@ -1,648 +1,534 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element -- direct image load/error events are required for the stage layers. */
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import {
-  useEffect,
-  useRef,
-  useState,
-  type KeyboardEvent,
-  type MouseEvent,
-  type TouchEvent,
-} from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef, useState, type FocusEvent } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/components/language-provider";
 
-const STEP_DURATION_MS = 5000;
-const PARTICLES_ENABLED = true;
-const PARTICLE_COUNT = 30;
+type Localized = { en: string; mn: string };
 
-type Point = { x: number; y: number };
-type Step = {
-  id: string;
-  keys: {
-    category: string;
-    title: string;
-    description: string;
-    stat: string;
-    alt: string;
-  };
-  bg: string | null;
-  fg: string;
-  objectPosition: string;
-  hotspot: Point;
-  zoomOrigin: Point;
-};
+const SLIDE_DURATION_MS = 7000;
+const IMAGE = { width: 2736, height: 1536 } as const;
+const CARD_MAX_WIDTH = 340;
+const EDGE = 16;
+const MOVE = { duration: 0.7, ease: "easeInOut" } as const;
+const FADE = { duration: 0.4, ease: "easeInOut" } as const;
 
-const technologySteps: Step[] = [
+const features = [
   {
     id: "advanced-sl",
-    keys: {
-      category: "technology.story.step01.category",
-      title: "technology.story.step01.title",
-      description: "technology.story.step01.description",
-      stat: "technology.story.step01.stat",
-      alt: "technology.story.step01.alt",
+    pin: { x: 50, y: 51 },
+    card: { side: 1, dx: 80, dy: 110 },
+    category: { en: "Composite engineering", mn: "Нийлмэл материалын инженерчлэл" },
+    title: { en: "Advanced SL Carbon", mn: "Advanced SL карбон" },
+    description: {
+      en: "Raw carbon fiber woven in Giant's own factory for an uncompromising stiffness-to-weight ratio.",
+      mn: "Giant-ийн өөрийн үйлдвэрт нэхсэн карбон ширхэг нь жин ба хөшүүн чанарын хамгийн сайн харьцааг өгнө.",
     },
-    bg: null,
-    fg: "/images/technology/propel-head-tube.webp",
-    objectPosition: "center",
-    hotspot: { x: 52, y: 46 },
-    zoomOrigin: { x: 52, y: 46 },
   },
   {
     id: "overdrive-aero",
-    keys: {
-      category: "technology.story.step02.category",
-      title: "technology.story.step02.title",
-      description: "technology.story.step02.description",
-      stat: "technology.story.step02.stat",
-      alt: "technology.story.step02.alt",
+    pin: { x: 53, y: 7 },
+    card: { side: 1, dx: 80, dy: 100 },
+    category: { en: "Aerodynamic design", mn: "Аэродинамик хийц" },
+    title: { en: "Overdrive Aero", mn: "Overdrive Aero" },
+    description: {
+      en: "Oversized D-shaped steerer tube and internal routing cut drag while sharpening front-end steering response.",
+      mn: "D хэлбэрийн томруулсан жолооны гол ба далд кабелийн суваг нь салхины эсэргүүцлийг бууруулж, жолоодлогыг илүү нарийн болгоно.",
     },
-    bg: null,
-    fg: "/images/technology/propel-front.webp",
-    objectPosition: "center",
-    hotspot: { x: 58, y: 52 },
-    zoomOrigin: { x: 58, y: 52 },
   },
   {
     id: "d-fuse",
-    keys: {
-      category: "technology.story.step03.category",
-      title: "technology.story.step03.title",
-      description: "technology.story.step03.description",
-      stat: "technology.story.step03.stat",
-      alt: "technology.story.step03.alt",
+    pin: { x: 54.5, y: 26 },
+    card: { side: 1, dx: 90, dy: 60 },
+    category: { en: "Comfort engineering", mn: "Тав тухын инженерчлэл" },
+    title: { en: "D-Fuse Technology", mn: "D-Fuse технологи" },
+    description: {
+      en: "A D-shaped composite seatpost that flexes to absorb road vibration without giving up aero efficiency.",
+      mn: "D хэлбэрийн карбон суудлын шон нь аэродинамикийг алдагдуулахгүйгээр замын чичиргээг шингээнэ.",
     },
-    bg: null,
-    fg: "/images/technology/propel-handlebar.webp",
-    objectPosition: "center",
-    hotspot: { x: 47, y: 37 },
-    zoomOrigin: { x: 47, y: 37 },
   },
   {
-    id: "maestro",
-    keys: {
-      category: "technology.story.step04.category",
-      title: "technology.story.step04.title",
-      description: "technology.story.step04.description",
-      stat: "technology.story.step04.stat",
-      alt: "technology.story.step04.alt",
+    id: "aero-shaping",
+    pin: { x: 62.5, y: 50 },
+    card: { side: 1, dx: 80, dy: -120 },
+    category: { en: "Frame design", mn: "Рамын хийц" },
+    title: { en: "AeroSystem Shaping", mn: "AeroSystem хэлбэржилт" },
+    description: {
+      en: "Truncated airfoil tube profiles and dropped seatstays shed turbulence across the whole frame and wheel zone.",
+      mn: "Тайрсан далавчны профиль болон намхан суудлын тулгуур нь рам ба дугуйн орчмын салхины эргэлтийг бууруулна.",
     },
-    bg: null,
-    fg: "/images/technology/emtb-shock.webp",
-    objectPosition: "center",
-    hotspot: { x: 56, y: 54 },
-    zoomOrigin: { x: 56, y: 54 },
   },
   {
-    id: "syncdrive-pro",
-    keys: {
-      category: "technology.story.step05.category",
-      title: "technology.story.step05.title",
-      description: "technology.story.step05.description",
-      stat: "technology.story.step05.stat",
-      alt: "technology.story.step05.alt",
+    id: "integrated-cockpit",
+    pin: { x: 42, y: 7.5 },
+    card: { side: 1, dx: 80, dy: 130 },
+    category: { en: "Front-end integration", mn: "Урд хэсгийн нэгдсэн хийц" },
+    title: { en: "Integrated Cockpit", mn: "Нэгдсэн кокпит" },
+    description: {
+      en: "Bar, stem and cabling merge into one clean aero unit that stays easy to fit and service.",
+      mn: "Залуур, шток болон кабель нэг цэвэрхэн аэро нэгж болж, тохируулга болон засвар үйлчилгээ хялбар хэвээр үлдэнэ.",
     },
-    bg: null,
-    fg: "/images/technology/emtb-motor.webp",
-    objectPosition: "center",
-    hotspot: { x: 51, y: 58 },
-    zoomOrigin: { x: 51, y: 58 },
   },
-  {
-    id: "aluxx-sl",
-    keys: {
-      category: "technology.story.step06.category",
-      title: "technology.story.step06.title",
-      description: "technology.story.step06.description",
-      stat: "technology.story.step06.stat",
-      alt: "technology.story.step06.alt",
-    },
-    bg: null,
-    fg: "/images/technology/talon-head-tube.webp",
-    objectPosition: "center",
-    hotspot: { x: 48, y: 43 },
-    zoomOrigin: { x: 48, y: 43 },
-  },
-];
+] as const;
 
-type Particle = { x: number; y: number; radius: number; speed: number; opacity: number };
-type Line = { fromX: number; fromY: number; toX: number; toY: number };
+type Feature = (typeof features)[number];
 
-function getVisibleImagePoint(
-  point: Point,
-  image: HTMLImageElement | null,
-  wrapper: HTMLElement | null,
-  objectPosition = "center",
-) {
-  if (!image?.naturalWidth || !wrapper) return point;
-  const rect = wrapper.getBoundingClientRect();
-  if (!rect.width || !rect.height) return point;
-  const scale = Math.max(rect.width / image.naturalWidth, rect.height / image.naturalHeight);
-  const width = image.naturalWidth * scale;
-  const height = image.naturalHeight * scale;
-  const positions = objectPosition.split(/\s+/);
-  const fraction = (position: string | undefined) => {
-    if (!position || position === "center") return 0.5;
-    if (position === "left" || position === "top") return 0;
-    if (position === "right" || position === "bottom") return 1;
-    const percent = Number.parseFloat(position);
-    return position.endsWith("%") && Number.isFinite(percent) ? percent / 100 : 0.5;
-  };
-  const verticalFirst = positions[0] === "top" || positions[0] === "bottom";
-  const xFraction = fraction(verticalFirst ? positions[1] : positions[0]);
-  const yFraction = fraction(verticalFirst ? positions[0] : positions[1]);
-  return {
-    x: ((point.x / 100 * width + (rect.width - width) * xFraction) / rect.width) * 100,
-    y: ((point.y / 100 * height + (rect.height - height) * yFraction) / rect.height) * 100,
-  };
+const copy = {
+  badge: { en: "Giant Engineering", mn: "Giant-ийн инженерчлэл" },
+  title: { en: "Propel Technology", mn: "Propel технологи" },
+  lead: {
+    en: "The core engineering behind the Propel, built around speed in every detail.",
+    mn: "Хурдыг эрхэмлэсэн Propel дугуйн гол инженерчлэлийн шийдлүүд.",
+  },
+  details: { en: "See the details", mn: "Дэлгэрэнгүй үзэх" },
+  explore: { en: "Explore Propel", mn: "Propel үзэх" },
+  features: { en: "Features", mn: "Онцлогууд" },
+} satisfies Record<string, Localized>;
+
+const sectionReveal = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+};
+
+const glass =
+  "backdrop-blur-sm bg-white/[0.08] dark:bg-black/40 border border-white/25 dark:border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.35)] rounded-2xl text-white";
+
+const pill =
+  "inline-flex items-center justify-center bg-white/15 dark:bg-white/10 border border-white/30 dark:border-white/20 backdrop-blur-[1px] rounded-full px-5 py-2 text-xs font-semibold text-white transition-all hover:bg-white/25 hover:border-white/40 shadow-sm";
+
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), Math.max(min, max));
+
+const round = (value: number) => Math.round(value * 10) / 10;
+
+function FeatureContent({
+  feature,
+  index,
+  language,
+}: {
+  feature: Feature;
+  index: number;
+  language: "en" | "mn";
+}) {
+  return (
+    <>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <p className="flex items-center gap-2 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-white/80">
+          <span aria-hidden="true" className="h-px w-5 bg-white/60" />
+          {feature.category[language]}
+        </p>
+        <span className="text-[0.65rem] font-semibold tabular-nums text-white/60">
+          {String(index + 1).padStart(2, "0")} / {String(features.length).padStart(2, "0")}
+        </span>
+      </div>
+      <h3 className="text-xl font-bold leading-tight tracking-tight text-white">
+        {feature.title[language]}
+      </h3>
+      <p className="mt-2 text-sm leading-relaxed text-white/80">
+        {feature.description[language]}
+      </p>
+    </>
+  );
 }
 
-export default function TechnologyStorySection() {
-  const { t } = useLanguage();
-  const reducedMotion = useReducedMotion() ?? false;
-  const sectionRef = useRef<HTMLElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const imageWrapperRef = useRef<HTMLDivElement>(null);
-  const imageRefs = useRef<Record<string, HTMLImageElement | null>>({});
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const descriptionRef = useRef<HTMLParagraphElement>(null);
-  const swipeStartRef = useRef<Point | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [userPaused, setUserPaused] = useState(false);
-  const [stepResetKey, setStepResetKey] = useState(0);
-  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
-  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
-  const [hovering, setHovering] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const [offscreen, setOffscreen] = useState(true);
-  const [tabHidden, setTabHidden] = useState(false);
-  const [debug, setDebug] = useState(false);
-  const [debugPoint, setDebugPoint] = useState<Point | null>(null);
-  const [line, setLine] = useState<Line>({ fromX: 0, fromY: 0, toX: 0, toY: 0 });
-  const [hotspotPosition, setHotspotPosition] = useState<Point>(technologySteps[0].hotspot);
-  const activeStep = technologySteps[activeIndex];
-  const nextStepId = technologySteps[(activeIndex + 1) % technologySteps.length].id;
-  const activeNumber = String(activeIndex + 1).padStart(2, "0");
-  const isPlaying = !userPaused && !hovering && !focused && !tabHidden && !offscreen && !reducedMotion;
-  const activeImageLoaded = loadedImages[activeStep.fg];
+export default function TechnologySection({ pageTitle = false }: { pageTitle?: boolean }) {
+  const { language } = useLanguage();
+  const text = (value: Localized) => value[language];
+  const Heading = pageTitle ? "h1" : "h2";
 
-  function selectStep(index: number) {
-    setActiveIndex((index + technologySteps.length) % technologySteps.length);
-    setStepResetKey((key) => key + 1);
-  }
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [resetKey, setResetKey] = useState(0);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const paused = hovered || focused;
+
+  const stageRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState({ w: 0, h: 0 });
+  const [headerBox, setHeaderBox] = useState({ right: 0, bottom: 0 });
+  const [contentBox, setContentBox] = useState({ left: EDGE, right: 0 });
+  const [cardHeight, setCardHeight] = useState(220);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      setOffscreen(!entry.isIntersecting);
-    }, { threshold: 0.15 });
-    observer.observe(section);
+    const stage = stageRef.current;
+    const container = containerRef.current;
+    const header = headerRef.current;
+    if (!stage) return;
+    const update = () => {
+      const s = stage.getBoundingClientRect();
+      setSize({ w: stage.clientWidth, h: stage.clientHeight });
+      if (header) {
+        const r = header.getBoundingClientRect();
+        setHeaderBox({ right: r.right - s.left, bottom: r.bottom - s.top });
+      }
+      if (container) {
+        const r = container.getBoundingClientRect();
+        const style = window.getComputedStyle(container);
+        setContentBox({
+          left: r.left - s.left + parseFloat(style.paddingLeft || "0"),
+          right: r.right - s.left - parseFloat(style.paddingRight || "0"),
+        });
+      }
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(stage);
+    if (container) observer.observe(container);
+    if (header) observer.observe(header);
     return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
-    const updateVisibility = () => setTabHidden(document.visibilityState !== "visible");
-    updateVisibility();
-    document.addEventListener("visibilitychange", updateVisibility);
-    return () => document.removeEventListener("visibilitychange", updateVisibility);
+    const node = cardRef.current;
+    if (!node) return;
+    const update = () => setCardHeight(node.offsetHeight);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(node);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      const isDebug = process.env.NODE_ENV === "development" &&
-        new URLSearchParams(window.location.search).get("debug") === "1";
-      setDebug(isDebug);
-      if (isDebug) setUserPaused(true);
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
+    if (paused) return;
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % features.length);
+    }, SLIDE_DURATION_MS);
+    return () => clearInterval(timer);
+  }, [activeIndex, resetKey, paused]);
 
-  useEffect(() => {
-    if (!isPlaying) return;
-    const timeout = window.setTimeout(() => {
-      setActiveIndex((index) => (index + 1) % technologySteps.length);
-    }, STEP_DURATION_MS);
-    return () => window.clearTimeout(timeout);
-  }, [activeIndex, isPlaying, stepResetKey]);
+  const selectFeature = (index: number) => {
+    setActiveIndex(index);
+    setResetKey((key) => key + 1);
+  };
 
-  useEffect(() => {
-    const wrapper = imageWrapperRef.current;
-    const image = imageRefs.current[activeStep.id];
-    if (!wrapper) return;
-    const updateHotspot = () => {
-      setHotspotPosition(
-        getVisibleImagePoint(activeStep.hotspot, image ?? null, wrapper, activeStep.objectPosition),
-      );
-    };
-    updateHotspot();
-    const observer = new ResizeObserver(updateHotspot);
-    observer.observe(wrapper);
-    window.addEventListener("resize", updateHotspot);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", updateHotspot);
-    };
-  }, [activeStep, activeIndex, activeImageLoaded]);
+  const pauseHandlers = {
+    onMouseEnter: () => setHovered(true),
+    onMouseLeave: () => setHovered(false),
+    onFocusCapture: (event: FocusEvent<HTMLElement>) =>
+      setFocused(event.target.matches(":focus-visible")),
+    onBlurCapture: () => setFocused(false),
+  };
 
-  useEffect(() => {
-    const stage = stageRef.current;
-    const wrapper = imageWrapperRef.current;
-    if (!stage || !wrapper) return;
-    const updateLine = () => {
-      const panel = panelRef.current;
-      if (!panel) return;
-      const stageBounds = stage.getBoundingClientRect();
-      const panelBounds = panel.getBoundingClientRect();
-      const dot = hotspotPosition;
-      const imageBounds = wrapper.getBoundingClientRect();
-      const fromX = panelBounds.right;
-      const fromY = descriptionRef.current
-        ? descriptionRef.current.getBoundingClientRect().bottom - stageBounds.top
-        : panelBounds.bottom - stageBounds.top;
-      setLine({
-        fromX: fromX - stageBounds.left,
-        fromY,
-        toX: imageBounds.left - stageBounds.left + dot.x / 100 * imageBounds.width,
-        toY: imageBounds.top - stageBounds.top + dot.y / 100 * imageBounds.height,
-      });
-    };
-    const frame = window.requestAnimationFrame(updateLine);
-    const observer = new ResizeObserver(updateLine);
-    observer.observe(stage);
-    observer.observe(wrapper);
-    const panelContainer = stage.querySelector(".technology-story__panel");
-    if (panelContainer) observer.observe(panelContainer);
-    window.addEventListener("resize", updateLine);
-    return () => {
-      window.cancelAnimationFrame(frame);
-      observer.disconnect();
-      window.removeEventListener("resize", updateLine);
-    };
-  }, [activeIndex, activeStep, offscreen, hotspotPosition]);
+  const mobile = size.w > 0 && size.w < 640;
 
-  useEffect(() => {
-    if (!PARTICLES_ENABLED || reducedMotion) return;
-    const section = sectionRef.current;
-    const canvas = canvasRef.current;
-    const context = canvas?.getContext("2d");
-    if (!section || !canvas || !context) return;
+  const layout = (() => {
+    if (!size.w || !size.h) return null;
+    const scale = Math.max(size.w / IMAGE.width, size.h / IMAGE.height);
+    const w = IMAGE.width * scale;
+    const h = IMAGE.height * scale;
+    const left = mobile ? clamp(size.w / 2 - w * 0.52, size.w - w, 0) : size.w - w;
+    return { w, h, left, top: (size.h - h) / 2 };
+  })();
 
-    const particles: Particle[] = Array.from({ length: PARTICLE_COUNT }, () => ({
-      x: Math.random(),
-      y: Math.random(),
-      radius: 0.7 + Math.random() * 1.4,
-      speed: 4 + Math.random() * 10,
-      opacity: 0.1 + Math.random() * 0.25,
-    }));
-    let frame = 0;
-    let visible = false;
-    let previousTime = 0;
-    let width = 0;
-    let height = 0;
-    const resize = () => {
-      const bounds = section.getBoundingClientRect();
-      width = bounds.width;
-      height = bounds.height;
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    const draw = (time: number) => {
-      frame = 0;
-      if (!visible || document.visibilityState !== "visible") return;
-      const delta = Math.min((time - (previousTime || time)) / 1000, 0.05);
-      previousTime = time;
-      context.clearRect(0, 0, width, height);
-      particles.forEach((particle) => {
-        particle.y -= particle.speed * delta / Math.max(height, 1);
-        if (particle.y < -0.02) particle.y = 1.02;
-        const x = particle.x * width;
-        const y = particle.y * height;
-        const glow = context.createRadialGradient(x, y, 0, x, y, particle.radius * 4);
-        glow.addColorStop(0, `rgba(190, 220, 255, ${particle.opacity})`);
-        glow.addColorStop(1, "rgba(120, 170, 255, 0)");
-        context.fillStyle = glow;
-        context.beginPath();
-        context.arc(x, y, particle.radius * 4, 0, Math.PI * 2);
-        context.fill();
-      });
-      frame = window.requestAnimationFrame(draw);
-    };
-    const schedule = () => {
-      if (visible && document.visibilityState === "visible" && !frame) {
-        frame = window.requestAnimationFrame(draw);
+  const toPoint = (pin: { x: number; y: number }) =>
+    layout
+      ? { x: layout.left + (pin.x / 100) * layout.w, y: layout.top + (pin.y / 100) * layout.h }
+      : null;
+
+  const isVisible = (point: { x: number; y: number } | null) =>
+    !!point && point.x > 24 && point.x < size.w - 24 && point.y > 24 && point.y < size.h - 24;
+
+  const k = clamp(size.w / 1000, 0.55, 1);
+  const active = features[activeIndex];
+  const minX = contentBox.left || EDGE;
+  const maxX = contentBox.right || size.w - EDGE;
+  const cardWidth = Math.min(CARD_MAX_WIDTH, Math.max(0, maxX - minX));
+
+  const activePin = toPoint(active.pin);
+  const pinVisible = isVisible(activePin);
+
+  const geometry = (() => {
+    if (!layout) return null;
+    const pin = activePin ?? { x: size.w * 0.6, y: size.h * 0.5 };
+
+    let x: number;
+    let y: number;
+    if (mobile) {
+      x = minX;
+      y = size.h - cardHeight - EDGE;
+    } else {
+      const { side, dx, dy } = active.card;
+      const rawX = side === 1 ? pin.x + dx * k : pin.x - dx * k - cardWidth;
+      x = clamp(rawX, minX, maxX - cardWidth);
+      y = clamp(pin.y + dy * k - cardHeight / 2, EDGE, size.h - cardHeight - EDGE);
+
+      const overlapsHeader =
+        headerBox.right > 0 && y < headerBox.bottom + EDGE && x < headerBox.right + EDGE;
+      if (overlapsHeader) {
+        if (headerBox.right + EDGE + cardWidth <= maxX) {
+          x = headerBox.right + EDGE;
+        } else {
+          y = clamp(headerBox.bottom + EDGE, EDGE, size.h - cardHeight - EDGE);
+        }
       }
-    };
-    const intersectionObserver = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      if (!visible && frame) {
-        window.cancelAnimationFrame(frame);
-        frame = 0;
-      }
-      schedule();
-    }, { threshold: 0.01 });
-    const onVisibility = () => {
-      if (document.visibilityState === "hidden" && frame) {
-        window.cancelAnimationFrame(frame);
-        frame = 0;
-      }
-      schedule();
-    };
-    resize();
-    intersectionObserver.observe(section);
-    window.addEventListener("resize", resize);
-    document.addEventListener("visibilitychange", onVisibility);
-    return () => {
-      intersectionObserver.disconnect();
-      window.removeEventListener("resize", resize);
-      document.removeEventListener("visibilitychange", onVisibility);
-      if (frame) window.cancelAnimationFrame(frame);
-    };
-  }, [reducedMotion]);
-
-  function onRailKeyDown(event: KeyboardEvent<HTMLElement>) {
-    if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
-      event.preventDefault();
-      selectStep(activeIndex + (event.key === "ArrowRight" ? 1 : -1));
     }
-  }
 
-  function onTouchStart(event: TouchEvent<HTMLDivElement>) {
-    const touch = event.touches[0];
-    swipeStartRef.current = { x: touch.clientX, y: touch.clientY };
-  }
+    const card = { x, y, right: x + cardWidth, bottom: y + cardHeight };
 
-  function onTouchEnd(event: TouchEvent<HTMLDivElement>) {
-    const start = swipeStartRef.current;
-    swipeStartRef.current = null;
-    if (!start) return;
-    const touch = event.changedTouches[0];
-    const dx = touch.clientX - start.x;
-    const dy = touch.clientY - start.y;
-    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy)) {
-      selectStep(activeIndex + (dx < 0 ? 1 : -1));
+    let attach: { x: number; y: number };
+    let elbow: { x: number; y: number };
+    if (pin.x < card.x) {
+      attach = { x: card.x, y: card.y + cardHeight / 2 };
+      elbow = { x: Math.max(pin.x, attach.x - 28), y: attach.y };
+    } else if (pin.x > card.right) {
+      attach = { x: card.right, y: card.y + cardHeight / 2 };
+      elbow = { x: Math.min(pin.x, attach.x + 28), y: attach.y };
+    } else {
+      const ax = clamp(pin.x, card.x + 20, card.right - 20);
+      attach = pin.y < card.y ? { x: ax, y: card.y } : { x: ax, y: card.bottom };
+      elbow = { x: ax, y: pin.y + (attach.y - pin.y) / 2 };
     }
-  }
 
-  function onImageClick(event: MouseEvent<HTMLDivElement>) {
-    if (!debug) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    const image = imageRefs.current[activeStep.id];
-    const display = {
-      x: (event.clientX - rect.left) / rect.width * 100,
-      y: (event.clientY - rect.top) / rect.height * 100,
-    };
-    let imagePoint = display;
-    if (image?.naturalWidth && image.naturalHeight) {
-      const scale = Math.max(rect.width / image.naturalWidth, rect.height / image.naturalHeight);
-      const renderedWidth = image.naturalWidth * scale;
-      const renderedHeight = image.naturalHeight * scale;
-      imagePoint = {
-        x: ((display.x / 100 * rect.width - (rect.width - renderedWidth) / 2) / renderedWidth) * 100,
-        y: ((display.y / 100 * rect.height - (rect.height - renderedHeight) / 2) / renderedHeight) * 100,
-      };
-    }
-    const x = Number(imagePoint.x.toFixed(2));
-    const y = Number(imagePoint.y.toFixed(2));
-    setDebugPoint({ x: display.x, y: display.y });
-    setUserPaused(true);
-    console.info(`Technology hotspot ${activeStep.fg}: { x: ${x}, y: ${y} }`);
-  }
-
-  function getImageStyle(step: Step) {
-    return {
-      objectFit: "cover" as const,
-      objectPosition: step.objectPosition,
-      transformOrigin: step.id === activeStep.id
-        ? `${hotspotPosition.x}% ${hotspotPosition.y}%`
-        : `${step.zoomOrigin.x}% ${step.zoomOrigin.y}%`,
-    };
-  }
+    const d = `M${round(pin.x)} ${round(pin.y)} L${round(elbow.x)} ${round(elbow.y)} L${round(attach.x)} ${round(attach.y)}`;
+    return { card, attach, d };
+  })();
 
   return (
-    <section
-      ref={sectionRef}
+    <motion.section
       id="technology"
       aria-labelledby="technology-heading"
-      className="technology-section technology-story"
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
-      onFocusCapture={() => setFocused(true)}
-      onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
-      }}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
+      className="technology-section relative flex min-h-[46rem] w-full items-center justify-center overflow-hidden bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#0b0f17] dark:text-white sm:min-h-[85vh] md:aspect-[2736/1536] md:max-h-screen"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      variants={sectionReveal}
     >
-      <div ref={stageRef} className="technology-story__stage">
+      <div ref={stageRef} className="absolute inset-0 z-0 h-full w-full">
         <div
-          ref={imageWrapperRef}
-          className={`technology-story__visual${debug ? " is-debug" : ""}`}
-          onClick={onImageClick}
+          className="absolute"
+          style={
+            layout
+              ? { left: layout.left, top: layout.top, width: layout.w, height: layout.h }
+              : { inset: 0 }
+          }
         >
-          <div className="technology-story__background-plate" aria-hidden="true" />
-          <div className="technology-story__image-stack">
-            {technologySteps.map((step) => (
-              <div
-                key={step.id}
-                className={`technology-story__image-layer${step.id === activeStep.id ? " is-active" : ""}`}
-                aria-hidden={step.id !== activeStep.id}
+          <Image
+            src="/images/giantbike4.png"
+            alt="Propel"
+            fill
+            priority
+            sizes="100vw"
+            className="h-full w-full object-cover object-right opacity-100"
+          />
+        </div>
+      </div>
+
+      <div
+        ref={containerRef}
+        className="pointer-events-none relative z-10 mx-auto w-full max-w-7xl self-start px-6 pt-6 md:px-12 md:pt-10"
+      >
+        <div
+          ref={headerRef}
+          className={`pointer-events-auto max-w-lg p-6 md:p-8 ${glass}`}
+          {...pauseHandlers}
+        >
+          <p className="mb-3 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-white/80">
+            <span aria-hidden="true" className="h-2 w-2 rounded-full bg-white/80" />
+            {text(copy.badge)}
+          </p>
+
+          <Heading
+            id="technology-heading"
+            className="text-4xl font-extrabold uppercase italic leading-[1.02] tracking-tight text-white md:text-5xl"
+          >
+            {text(copy.title)}
+          </Heading>
+
+          <p className="mt-4 max-w-md text-sm leading-relaxed text-white/80">
+            {text(copy.lead)}
+          </p>
+
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <Link
+              href="/technology"
+              className={`${pill} uppercase tracking-[0.2em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70`}
+            >
+              {text(copy.details)}
+            </Link>
+            <Link
+              href="/bikes"
+              className={`${pill} uppercase tracking-[0.2em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70`}
+            >
+              {text(copy.explore)}
+            </Link>
+          </div>
+
+          <nav className="mt-6 flex flex-row flex-wrap gap-3" aria-label={text(copy.features)}>
+            {features.map((feature, index) => {
+              const isActive = index === activeIndex;
+              return (
+                <button
+                  key={feature.id}
+                  type="button"
+                  title={text(feature.title)}
+                  aria-label={text(feature.title)}
+                  aria-current={isActive ? "step" : undefined}
+                  onClick={() => selectFeature(index)}
+                  className="group flex flex-col items-center gap-1.5 outline-none"
+                >
+                  <span
+                    className={`${pill} h-10 w-10 !p-0 tabular-nums group-focus-visible:ring-2 group-focus-visible:ring-white/70 ${
+                      isActive
+                        ? "!border-white/60 !bg-white/35"
+                        : "group-hover:bg-white/25"
+                    }`}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="h-0.5 w-8 overflow-hidden rounded-full bg-white/25">
+                    {isActive && (
+                      <motion.span
+                        key={`progress-${activeIndex}-${resetKey}-${paused ? "paused" : "running"}`}
+                        className="block h-full w-full origin-left bg-white"
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: paused ? 0 : 1 }}
+                        transition={{
+                          duration: paused ? 0.2 : SLIDE_DURATION_MS / 1000,
+                          ease: "linear",
+                        }}
+                      />
+                    )}
+                  </span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+
+      <div className="pointer-events-none absolute inset-0 z-40">
+        {geometry && (
+          <svg aria-hidden="true" width={size.w} height={size.h} className="absolute inset-0">
+            <motion.path
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth={4}
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              initial={false}
+              animate={{ d: geometry.d, opacity: pinVisible ? 0.85 : 0 }}
+              transition={MOVE}
+            />
+            <motion.path
+              fill="none"
+              stroke="#0b0f17"
+              strokeWidth={1.75}
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              initial={false}
+              animate={{ d: geometry.d, opacity: pinVisible ? 1 : 0 }}
+              transition={MOVE}
+            />
+            <motion.circle
+              r={3.5}
+              fill="#1a1aec"
+              stroke="#ffffff"
+              strokeWidth={1.5}
+              initial={false}
+              animate={{
+                cx: geometry.attach.x,
+                cy: geometry.attach.y,
+                opacity: pinVisible ? 1 : 0,
+              }}
+              transition={MOVE}
+            />
+          </svg>
+        )}
+
+        {features.map((feature, index) => {
+          const point = toPoint(feature.pin);
+          if (!point || !isVisible(point)) return null;
+          const isActive = index === activeIndex;
+          return (
+            <button
+              key={feature.id}
+              type="button"
+              aria-label={text(feature.title)}
+              aria-pressed={isActive}
+              onClick={() => selectFeature(index)}
+              className="group pointer-events-auto absolute left-0 top-0 grid h-11 w-11 place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#1a1aec]"
+              style={{ transform: `translate(${point.x - 22}px, ${point.y - 22}px)` }}
+            >
+              <span
+                aria-hidden="true"
+                className="relative grid h-full w-full place-items-center"
               >
-                {step.bg && !failedImages[step.bg] && (
-                  <img
-                    src={step.bg}
-                    alt=""
-                    className="technology-story__background-image"
-                    draggable={false}
-                    onLoad={() => setLoadedImages((current) => ({ ...current, [step.bg!]: true }))}
-                    onError={() => {
-                      console.warn(`[TechnologyStory] Image failed to load: ${step.bg}`);
-                      setFailedImages((current) => ({ ...current, [step.bg!]: true }));
-                    }}
-                  />
+                {isActive && (
+                  <>
+                    <motion.span
+                      className="absolute h-8 w-8 rounded-full border-2 border-[#1a1aec] bg-white/30"
+                      animate={{ scale: [0.6, 1.8], opacity: [0.95, 0] }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
+                    />
+                    <motion.span
+                      className="absolute h-8 w-8 rounded-full border-2 border-[#1a1aec] bg-white/30"
+                      animate={{ scale: [0.6, 1.8], opacity: [0.95, 0] }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut", delay: 0.9 }}
+                    />
+                  </>
                 )}
-                {!failedImages[step.fg] && (
-                  <img
-                    ref={(node) => {
-                      imageRefs.current[step.id] = node;
-                    }}
-                    src={step.fg}
-                    alt={t(step.keys.alt)}
-                    className={`technology-story__photo${step.id === activeStep.id ? " is-active" : ""}${loadedImages[step.fg] ? " is-loaded" : ""}`}
-                    style={getImageStyle(step)}
-                    loading={step.id === activeStep.id || step.id === nextStepId ? "eager" : "lazy"}
-                    draggable={false}
-                    onLoad={() => setLoadedImages((current) => ({ ...current, [step.fg]: true }))}
-                    onError={() => {
-                      console.warn(`[TechnologyStory] Image failed to load: ${step.fg}`);
-                      setFailedImages((current) => ({ ...current, [step.fg]: true }));
-                    }}
-                  />
-                )}
-                <div
-                  className={`technology-story__image-placeholder${loadedImages[step.fg] ? " is-loaded" : ""}`}
-                  aria-hidden="true"
+                <motion.span
+                  className="relative rounded-full border-2 bg-white"
+                  initial={false}
+                  animate={{
+                    width: isActive ? 16 : 12,
+                    height: isActive ? 16 : 12,
+                    borderColor: isActive ? "#1a1aec" : "#0b0f17",
+                    boxShadow: isActive
+                      ? "0 0 0 2px #ffffff, 0 4px 12px rgba(0,0,0,0.55)"
+                      : "0 0 0 1.5px #ffffff, 0 2px 8px rgba(0,0,0,0.45)",
+                  }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
                 />
+              </span>
+            </button>
+          );
+        })}
+
+        <motion.div
+          ref={cardRef}
+          className={`pointer-events-auto absolute left-0 top-0 p-5 will-change-transform md:p-6 ${glass}`}
+          style={{ width: cardWidth || undefined }}
+          initial={false}
+          animate={{
+            x: geometry?.card.x ?? 0,
+            y: geometry?.card.y ?? 0,
+            opacity: geometry ? 1 : 0,
+          }}
+          transition={MOVE}
+          aria-live="polite"
+          {...pauseHandlers}
+        >
+          <div className="grid">
+            {features.map((feature, index) => (
+              <div
+                key={`sizer-${feature.id}`}
+                aria-hidden="true"
+                className="invisible col-start-1 row-start-1"
+              >
+                <FeatureContent feature={feature} index={index} language={language} />
               </div>
             ))}
-          </div>
-          <div className="technology-story__scrim" aria-hidden="true" />
-          {PARTICLES_ENABLED && <canvas ref={canvasRef} className="technology-story__particles" aria-hidden="true" />}
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={`hotspot-${activeStep.id}`}
-              className="technology-story__hotspot"
-              style={{
-                left: `calc(${hotspotPosition.x}% - 0.5rem)`,
-                top: `calc(${hotspotPosition.y}% - 0.5rem)`,
-                transformOrigin: `${activeStep.zoomOrigin.x}% ${activeStep.zoomOrigin.y}%`,
-              }}
-              initial={reducedMotion ? false : { opacity: 0, scale: 0.7 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={reducedMotion ? undefined : { opacity: 0, scale: 0.7 }}
-              transition={{ duration: reducedMotion ? 0 : 0.2 }}
-              aria-hidden="true"
-            >
-              <span className="technology-story__pulse" />
-              <motion.span
-                className="technology-story__hotspot-label"
-                initial={reducedMotion ? false : { opacity: 0, scaleX: 0.8 }}
-                animate={{ opacity: 1, scaleX: 1 }}
-                transition={{ duration: reducedMotion ? 0 : 0.25, delay: reducedMotion ? 0 : 0.2 }}
-              >
-                {t(activeStep.keys.title)}
-              </motion.span>
-            </motion.div>
-          </AnimatePresence>
-          {debug && debugPoint && (
-            <span
-              className="technology-story__debug-crosshair"
-              style={{ left: `${debugPoint.x}%`, top: `${debugPoint.y}%` }}
-              aria-hidden="true"
-            />
-          )}
-        </div>
 
-        <div className="technology-story__content">
-          <header className="technology-story__header">
-            <p>{t("technology.story.eyebrow")}</p>
-            <h2 id="technology-heading">{t("technology.story.heading")}</h2>
-            <span>{t("technology.story.tagline")}</span>
-          </header>
-          <div className="technology-story__layout">
-            <nav
-              className="technology-story__rail"
-              aria-label={t("technology.story.rail")}
-              onKeyDown={onRailKeyDown}
-            >
-              {technologySteps.map((step, index) => (
-                <button
-                  key={step.id}
-                  type="button"
-                  className={`technology-story__rail-step${index === activeIndex ? " is-active" : ""}`}
-                  aria-current={index === activeIndex ? "step" : undefined}
-                  aria-label={`${String(index + 1).padStart(2, "0")}: ${t(step.keys.title)}`}
-                  onClick={() => selectStep(index)}
-                >
-                  <span className="technology-story__rail-dot" />
-                  <span className="technology-story__rail-label">
-                    <span>{String(index + 1).padStart(2, "0")}</span>
-                    {t(step.keys.title)}
-                  </span>
-                  {index === activeIndex && (
-                    <span
-                      key={activeIndex}
-                      className="technology-story__rail-progress"
-                    >
-                      <span
-                        key={`${stepResetKey}-${isPlaying}`}
-                        className={`technology-story__rail-progress-fill${isPlaying ? " is-running" : ""}`}
-                        style={{ animationDuration: `${STEP_DURATION_MS}ms` }}
-                      />
-                    </span>
-                  )}
-                </button>
-              ))}
-              <button
-                type="button"
-                className="technology-story__play-toggle"
-                aria-pressed={isPlaying}
-                onClick={() => {
-                  setUserPaused(isPlaying);
-                }}
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={`${active.id}-${language}`}
+                className="col-start-1 row-start-1"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={FADE}
               >
-                {isPlaying ? t("technology.story.pause") : t("technology.story.play")}
-              </button>
-            </nav>
-            <div className="technology-story__panel" aria-live="polite" aria-atomic="true">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={activeStep.id}
-                  ref={panelRef}
-                  className="technology-story__feature"
-                  initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reducedMotion ? undefined : { opacity: 0, y: -12 }}
-                  transition={{ duration: reducedMotion ? 0 : 0.3, ease: "easeOut" }}
-                >
-                  <motion.p
-                    className="technology-story__counter"
-                    initial={reducedMotion ? false : { opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: reducedMotion ? 0 : 0.2, delay: reducedMotion ? 0 : 0.02 }}
-                  >
-                    {activeNumber} <span>/ 06</span>
-                  </motion.p>
-                  <motion.p
-                    className="technology-story__category"
-                    initial={reducedMotion ? false : { opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: reducedMotion ? 0 : 0.2, delay: reducedMotion ? 0 : 0.06 }}
-                  >
-                    {t(activeStep.keys.category)}
-                  </motion.p>
-                  <motion.h3
-                    initial={reducedMotion ? false : { opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: reducedMotion ? 0 : 0.25, delay: reducedMotion ? 0 : 0.08 }}
-                  >
-                    {t(activeStep.keys.title)}
-                  </motion.h3>
-                  <motion.p
-                    ref={descriptionRef}
-                    className="technology-story__description"
-                    initial={reducedMotion ? false : { opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: reducedMotion ? 0 : 0.25, delay: reducedMotion ? 0 : 0.14 }}
-                  >
-                    {t(activeStep.keys.description)}
-                  </motion.p>
-                  <motion.span
-                    className="technology-story__stat"
-                    initial={reducedMotion ? false : { opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: reducedMotion ? 0 : 0.25, delay: reducedMotion ? 0 : 0.2 }}
-                  >
-                    {t(activeStep.keys.stat)}
-                  </motion.span>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+                <FeatureContent feature={active} index={activeIndex} language={language} />
+              </motion.div>
+            </AnimatePresence>
           </div>
-        </div>
-        <svg className="technology-story__connector" aria-hidden="true">
-          <path
-            key={activeStep.id}
-            d={`M ${line.fromX} ${line.fromY} L ${line.toX} ${line.toY}`}
-            pathLength="1000"
-            className={reducedMotion ? "is-static" : ""}
-          />
-        </svg>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -12,7 +12,9 @@ export default function Logo({ inverted = false, className }: LogoProps) {
       width={160}
       height={40}
       priority
-      className={`${className ?? "h-10 w-auto md:h-12"} ${inverted ? "brightness-0 invert" : ""}`}
+      className={`${className ?? "h-10 w-auto md:h-12"} ${
+        inverted ? "brightness-0 invert" : "dark:brightness-0 dark:invert"
+      }`}
     />
   );
 }

@@ -113,7 +113,6 @@ export default function ProductDetailExperience({ product }: { product: Product 
               sizes="(min-width: 1024px) 55vw, 100vw"
               className="product-gallery__image"
               style={{
-                filter: colorway.filter,
                 objectPosition: galleryImage.position,
                 transform: `scale(${galleryImage.scale})`,
               }}
@@ -141,7 +140,6 @@ export default function ProductDetailExperience({ product }: { product: Product 
                   sizes="100px"
                   className="product-gallery__thumbnail-image"
                   style={{
-                    filter: colorway.filter,
                     objectPosition: view.position,
                     transform: `scale(${view.scale})`,
                   }}
@@ -158,7 +156,11 @@ export default function ProductDetailExperience({ product }: { product: Product 
           {language === "en" && product.priceUsd === undefined && (
             <p className="product-price-note">Estimated conversion from MNT</p>
           )}
-          <p className="product-detail__copy">{translate(product.description)}</p>
+          <p className="product-detail__copy">
+            {language === "mn" && product.descriptionMn
+              ? product.descriptionMn
+              : translate(product.description)}
+          </p>
 
           <fieldset className="product-colorways">
             <legend className="product-control-label">

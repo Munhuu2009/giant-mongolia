@@ -17,10 +17,10 @@ function firstParam(value: string | string[] | undefined): string | undefined {
 export default async function BikesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ discipline?: string | string[] }>;
+  searchParams: Promise<{ category?: string | string[]; discipline?: string | string[] }>;
 }) {
   const params = await searchParams;
-  const disciplineId = firstParam(params.discipline);
+  const disciplineId = firstParam(params.category) ?? firstParam(params.discipline);
   const initialCategory: BikeCategory | "all" =
     disciplineId === "ebike" ||
     disciplineId === "road" ||
@@ -34,7 +34,7 @@ export default async function BikesPage({
   return (
     <main>
       <BikeVideoHero />
-      <BikeCatalog initialCategory={initialCategory} />
+      <BikeCatalog key={initialCategory} initialCategory={initialCategory} />
     </main>
   );
 }
